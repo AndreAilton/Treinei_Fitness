@@ -27,6 +27,10 @@ export default class Admins extends Model {
                     }
                 }
             },
+            status: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: true,
+            },
             password_hash: {
                 type: DataTypes.STRING,
             },

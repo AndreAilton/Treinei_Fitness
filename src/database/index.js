@@ -1,6 +1,10 @@
 import Sequelize from "sequelize";
 import databaseConfig from "../config/database.js";
+import Usuario from "../models/Usuario.js";
+import Treinador from "../models/Treinador.js";
 
+
+const models = [Usuario, Treinador];
 const connection = new Sequelize(databaseConfig);
 
 (async () => {

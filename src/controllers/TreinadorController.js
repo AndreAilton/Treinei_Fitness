@@ -1,56 +1,120 @@
 import Treinador from "../models/Treinador.js";
 
 class TreinadorController {
-    async store(req, res) {
-        try {
-            const novoTreinador = await Treinador.create(req.body);
-            return res.status(200).json({success: true, Treinador: novoTreinador});
-        } catch (e) {
-            if (e.name === 'SequelizeUniqueConstraintError') {
-                return res.status(400).json({ errors: ['Este e-mail já está cadastrado.'] });
-            }
-            return res.status(400).json({sucess: false, errors: e.errors.map((err) => err.message)});      
-        }
+  async store(req, res) {
+    try {
+      const novoTreinador = await Treinador.create(req.body);
+      return res.status(200).json({ success: true, treinador: novoTreinador });
+    } catch (e) {
+      if (e.name === "SequelizeUniqueConstraintError") {
+        return res
+          .status(400)
+          .json({ errors: ["Este e-mail já está cadastrado."] });
+      }
+      if (e.name === "SequelizeValidationError") {
+        return res
+          .status(400)
+          .json({ errors: e.errors.map((err) => err.message) });
+      }
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Erro ao criar treinador",
+          error: e.message,
+        });
     }
+  }
 
-    async index(req, res) {
-        return null
+  async index(req, res) {
+    try {
+      const treinadores = await Treinador.findAll({
+        attributes: ["id", "nome", "email", "status"],
+      });
+      return res.status(200).json({ success: true, treinadores });
+    } catch (e) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Erro ao listar treinadores",
+          error: e.message,
+        });
     }
+  }
 
-    async show(req, res) {
-            const Treinador = await Treinador.findByPk(req.TreinadorId, {
-                attributes: ['id', 'name', 'email','status']});
-            if (Treinador.status === false){
-                 return res.status(400).json({sucess: false, message:"usuario desativado"});
-            }
-            return res.status(200).json({sucess: true, Treinador});
-        } catch (e) {
-            return res.status(400).json({sucess: false, message:"usuario nao encontrado"});}
-    
-
-        
-
-    async update(req, res) {
-        try {
-            const Treinador = await Treinador.findByPk(req.TreinadorId);
-            await Treinador.update(req.body);
-            const { id, name, email } = Treinador;
-            return res.status(200).json({ id, name, email });
-        } catch (e) {
-            return res.status(400).json(e);
-        }
+  async show(req, res) {
+    try {
+      const treinador = await Treinador.findByPk(req.TreinadorId, {
+        attributes: ["id", "nome", "email", "status"],
+      });
+      if (!treinador) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Treinador não encontrado" });
+      }
+      if (treinador.status === false) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Treinador desativado" });
+      }
+      return res.status(200).json({ success: true, treinador });
+    } catch (e) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Erro ao buscar treinador",
+          error: e.message,
+        });
     }
+  }
 
-    async destroy(req, res) {
-        try {
-            const Treinador = await Treinador.findByPk(req.TreinadorId);
-            Treinador.status = false;
-            await Treinador.save();
-            return res.status(200).json({sucess: true, message:"usuario desativado"});
-        } catch (e) {
-            return res.status(400).json(e);
-        }
+  async update(req, res) {
+    try {
+      const treinador = await Treinador.findByPk(req.TreinadorId);
+      if (!treinador) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Treinador não encontrado" });
+      }
+      await treinador.update(req.body);
+      const { id, nome, email } = treinador;
+      return res.status(200).json({ id, nome, email });
+    } catch (e) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Erro ao atualizar treinador",
+          error: e.message,
+        });
     }
+  }
+
+  async destroy(req, res) {
+    try {
+      const treinador = await Treinador.findByPk(req.TreinadorId);
+      if (!treinador) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Treinador não encontrado" });
+      }
+      treinador.status = false;
+      await treinador.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "Treinador desativado" });
+    } catch (e) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Erro ao desativar treinador",
+          error: e.message,
+        });
+    }
+  }
 }
 
 export default new TreinadorController();

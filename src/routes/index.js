@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import UserRoutes from "./UserRoutes.js";
+import UserRoutes from "./UsuarioRoutes.js";
 import TokenRoutes from "./TokenRoutes.js";
 const router = Router();
 

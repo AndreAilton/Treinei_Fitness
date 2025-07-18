@@ -24,6 +24,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true, // Usuário ativo por padrão
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,

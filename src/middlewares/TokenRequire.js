@@ -1,47 +1,50 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import User from "../models/Usuario.js";
 
 export default async (req, res, next) => {
-    const {authorization} = req.headers;
+  const { authorization } = req.headers;
 
-    if (!authorization) {
-        return res.status(401).json({
-            errors: ['Login Requerido']
-        })
+  if (!authorization) {
+    return res.status(401).json({
+      errors: ["Login Requerido"],
+    });
+  }
+
+  const [bearer, token] = authorization.split(" ");
+  if (!token) {
+    return res.status(401).json({
+      errors: ["Token não fornecido"],
+    });
+  }
+
+  try {
+    const dados = jwt.verify(token, process.env.TOKEN_SECRET);
+    const { id, email } = dados;
+
+    const user = await User.findOne({
+      where: { id, email },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        errors: ["Usuário inválido"],
+      });
     }
-    const [ text, token] = authorization.split(' ');
 
-    try {
-            return next();
-        } catch (e) {
-            try {
-                const dados = jwt.verify(token, process.env.TOKEN_SECRET)
-                const {id, email} = dados
-        
-                const user = await User.findOne({
-                    where: {id,
-                        email
-                    }
-                })
+    if (user.status === false) {
+      return res
+        .status(401)
+        .json({ message: "Usuário desativado. Faça login novamente." });
+    }
 
-                if (user.status === false) {
-                    return res.status(401).json({ message: 'Usuário desativado. Faça login novamente.' });
-                }
-
-                if (!user) {
-                    return res.status(401).json({
-                        errors: ['Usuario Invalido']
-                    })
-                }
-                req.userId = id;
-                req.useremail = email;
-                req.isAdmin = false
-                return next();
-            } catch(e) {
-                return res.status(401).json({sucess: false,
-                    errors: ['Token expirado ou invalido']
-                })
-            }
- 
-        }
-}
+    req.userId = id;
+    req.useremail = email;
+    req.isAdmin = false;
+    return next();
+  } catch (e) {
+    return res.status(401).json({
+      success: false,
+      errors: ["Token expirado ou inválido"],
+    });
+  }
+};

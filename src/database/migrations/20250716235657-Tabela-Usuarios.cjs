@@ -19,6 +19,10 @@ module.exports = {
         allowNull: false,
         unique: true, // Garante que o email seja único
       },
+      status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true, // Usuário ativo por padrão
+      },
       password_hash: {
         type: Sequelize.STRING,
         allowNull: false,

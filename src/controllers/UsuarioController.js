@@ -1,56 +1,110 @@
-import User from "../models/Usuario.js";
+import Usuarios from "../models/Usuario.js";
 
 class UserController {
-    async store(req, res) {
-        try {
-            const novoUser = await User.create(req.body);
-            return res.status(200).json({success: true, user: novoUser});
-        } catch (e) {
-            if (e.name === 'SequelizeUniqueConstraintError') {
-                return res.status(400).json({ errors: ['Este e-mail já está cadastrado.'] });
-            }
-            return res.status(400).json({sucess: false, errors: e.errors.map((err) => err.message)});      
-        }
+  async store(req, res) {
+    try {
+      const novoUser = await Usuarios.create(req.body);
+      return res.status(200).json({ success: true, user: novoUser });
+    } catch (e) {
+      if (e.name === "SequelizeUniqueConstraintError") {
+        return res
+          .status(400)
+          .json({ errors: ["Este e-mail já está cadastrado."] });
+      }
+      if (e.name === "SequelizeValidationError") {
+        return res
+          .status(400)
+          .json({ errors: e.errors.map((error) => error.message) });
+      }
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar usuário",
+        error: e.message,
+      });
     }
+  }
 
-    async index(req, res) {
-        return null
+  async index(req, res) {
+    try {
+      const usuarios = await Usuarios.findAll({
+        attributes: ["id", "nome", "email", "status"],
+      });
+      return res.status(200).json({ success: true, usuarios });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao listar usuários",
+        error: e.message,
+      });
     }
+  }
 
-    async show(req, res) {
-            const user = await User.findByPk(req.userId, {
-                attributes: ['id', 'name', 'email','status']});
-            if (user.status === false){
-                 return res.status(400).json({sucess: false, message:"usuario desativado"});
-            }
-            return res.status(200).json({sucess: true, user});
-        } catch (e) {
-            return res.status(400).json({sucess: false, message:"usuario nao encontrado"});}
-    
-
-        
-
-    async update(req, res) {
-        try {
-            const user = await User.findByPk(req.userId);
-            await user.update(req.body);
-            const { id, name, email } = user;
-            return res.status(200).json({ id, name, email });
-        } catch (e) {
-            return res.status(400).json(e);
-        }
+  async show(req, res) {
+    try {
+      const user = await Usuarios.findByPk(req.userId, {
+        attributes: ["id", "nome", "email", "status"],
+      });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuário não encontrado" });
+      }
+      if (user.status === false) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Usuário desativado" });
+      }
+      return res.status(200).json({ success: true, user });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao buscar usuário",
+        error: e.message,
+      });
     }
+  }
 
-    async destroy(req, res) {
-        try {
-            const user = await User.findByPk(req.userId);
-            user.status = false;
-            await user.save();
-            return res.status(200).json({sucess: true, message:"usuario desativado"});
-        } catch (e) {
-            return res.status(400).json(e);
-        }
+  async update(req, res) {
+    try {
+      const user = await Usuarios.findByPk(req.userId);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuário não encontrado" });
+      }
+      await user.update(req.body);
+      const { id, nome, email } = user;
+      return res.status(200).json({ id, nome, email });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao atualizar usuário",
+        error: e.message,
+      });
     }
+  }
+
+  async destroy(req, res) {
+    try {
+      const user = await Usuarios.findByPk(req.userId);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuário não encontrado" });
+      }
+      user.status = false;
+      await user.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "Usuário desativado" });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao desativar usuário",
+        error: e.message,
+      });
+    }
+  }
 }
 
 export default new UserController();
