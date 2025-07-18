@@ -6,7 +6,7 @@ export default class Admins extends Model {
 
     static init(sequelize) {
         super.init({
-            name: {
+            nome: {
                 type: DataTypes.STRING,
                 allowNull: false,  // Defina se o campo pode ser nulo
                 defaultValue: '',

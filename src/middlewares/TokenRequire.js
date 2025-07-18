@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/Usuario.js";
+import Treinador from "../models/Treinador.js";
 
 export default async (req, res, next) => {
   const { authorization } = req.headers;
@@ -19,26 +20,37 @@ export default async (req, res, next) => {
 
   try {
     const dados = jwt.verify(token, process.env.TOKEN_SECRET);
-    const { id, email } = dados;
+    const { id, email, tipo } = dados;
 
-    const user = await User.findOne({
-      where: { id, email },
-    });
+    let usuario = null;
+    if (tipo === "treinador") {
+      usuario = await Treinador.findOne({ where: { id, email } });
+    } else {
+      usuario = await User.findOne({ where: { id, email } });
+    }
 
-    if (!user) {
+    if (!usuario) {
       return res.status(401).json({
-        errors: ["Usuário inválido"],
+        errors: [
+          tipo === "treinador" ? "Treinador inválido" : "Usuário inválido",
+        ],
       });
     }
 
-    if (user.status === false) {
+    if (usuario.status === false) {
       return res
         .status(401)
-        .json({ message: "Usuário desativado. Faça login novamente." });
+        .json({
+          message:
+            tipo === "treinador"
+              ? "Treinador desativado. Faça login novamente."
+              : "Usuário desativado. Faça login novamente.",
+        });
     }
 
     req.userId = id;
     req.useremail = email;
+    req.tipo = tipo || "usuario";
     req.isAdmin = false;
     return next();
   } catch (e) {

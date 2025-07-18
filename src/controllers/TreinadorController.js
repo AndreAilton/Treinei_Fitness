@@ -16,13 +16,11 @@ class TreinadorController {
           .status(400)
           .json({ errors: e.errors.map((err) => err.message) });
       }
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao criar treinador",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar treinador",
+        error: e.message,
+      });
     }
   }
 
@@ -33,19 +31,22 @@ class TreinadorController {
       });
       return res.status(200).json({ success: true, treinadores });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao listar treinadores",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao listar treinadores",
+        error: e.message,
+      });
     }
   }
 
   async show(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
-      const treinador = await Treinador.findByPk(req.TreinadorId, {
+      const treinador = await Treinador.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
       });
       if (!treinador) {
@@ -60,19 +61,22 @@ class TreinadorController {
       }
       return res.status(200).json({ success: true, treinador });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao buscar treinador",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao buscar treinador",
+        error: e.message,
+      });
     }
   }
 
   async update(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
-      const treinador = await Treinador.findByPk(req.TreinadorId);
+      const treinador = await Treinador.findByPk(req.userId);
       if (!treinador) {
         return res
           .status(404)
@@ -82,19 +86,22 @@ class TreinadorController {
       const { id, nome, email } = treinador;
       return res.status(200).json({ id, nome, email });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao atualizar treinador",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao atualizar treinador",
+        error: e.message,
+      });
     }
   }
 
   async destroy(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
-      const treinador = await Treinador.findByPk(req.TreinadorId);
+      const treinador = await Treinador.findByPk(req.userId);
       if (!treinador) {
         return res
           .status(404)
@@ -106,13 +113,11 @@ class TreinadorController {
         .status(200)
         .json({ success: true, message: "Treinador desativado" });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao desativar treinador",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao desativar treinador",
+        error: e.message,
+      });
     }
   }
 }
