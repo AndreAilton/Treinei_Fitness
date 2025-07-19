@@ -63,4 +63,7 @@ export default class Admins extends Model {
         return bcryptjs.compare(password, this.password_hash);
 
     } 
+    static associate(models) {
+        this.hasMany(models.Exercicio, { foreignKey: 'id_treinador', as: 'exercicios' });
+    }
 }

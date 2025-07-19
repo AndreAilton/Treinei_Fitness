@@ -1,4 +1,5 @@
 import Treinador from "../models/Treinador.js";
+import Exercicio from "../models/Exercicio.js";
 
 class TreinadorController {
   async store(req, res) {
@@ -48,6 +49,12 @@ class TreinadorController {
     try {
       const treinador = await Treinador.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
+        include: [
+          {
+            model: Exercicio,
+            as: "exercicios",
+          },
+        ],
       });
       if (!treinador) {
         return res

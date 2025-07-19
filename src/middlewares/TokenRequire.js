@@ -50,6 +50,7 @@ export default async (req, res, next) => {
 
     req.userId = id;
     req.useremail = email;
+    req.treinadorId = tipo === "treinador" ? id : null;
     req.tipo = tipo || "usuario";
     req.isAdmin = false;
     return next();

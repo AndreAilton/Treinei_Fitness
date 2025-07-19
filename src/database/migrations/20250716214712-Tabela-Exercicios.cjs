@@ -22,13 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-
-      Descrição: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      
-      Grupo_Muscular: {
+      Descricao: {
         type: Sequelize.STRING,
         allowNull: false,
       },
