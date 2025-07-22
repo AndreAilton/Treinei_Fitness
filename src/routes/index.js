@@ -5,6 +5,8 @@ import TreinadorRoutes from "./TreinadorRoutes.js";
 import TokenRoutes from "./TokenRoutes.js";
 import ExercicioRoutes from "./ExercicioRoutes.js";
 import TreinoRoutes from "./TreinoRoutes.js";
+import TreinoDiaRoutes from "./TreinoDiaRoutes.js";
+
 const router = Router();
 
 // Rota de boas-vindas
@@ -16,6 +18,7 @@ router.use("/treinadores", TreinadorRoutes);
 router.use("/token", TokenRoutes);
 router.use("/exercicios", ExercicioRoutes);
 router.use("/treinos", TreinoRoutes);
+router.use("/treinos-dias", TreinoDiaRoutes);
 // Rota para 404
 router.use("*", (req, res) => res.status(404).json({ error: "Página Não Encontrada" }));
 
