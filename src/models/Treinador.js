@@ -65,5 +65,6 @@ export default class Admins extends Model {
     } 
     static associate(models) {
         this.hasMany(models.Exercicio, { foreignKey: 'id_treinador', as: 'exercicios' });
+        this.hasMany(models.Treino, { foreignKey: 'id_treinador', as: 'treinos' });
     }
 }

@@ -19,4 +19,8 @@ export default class Treino extends Model {
     );
     return this;
   }
+    static associate(models) {
+    // Associa a tarefa com o usuário
+    this.belongsTo(models.Admins, { foreignKey: 'id_treinador' });
+  }
 }
