@@ -13,6 +13,7 @@ module.exports = {
       id_Usuario: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true, // Permite múltiplas relações para o mesmo usuário
         references: {
           model: 'Usuarios', // Nome da tabela referenciada   
           key: 'id', // Chave primária da tabela referenciada
