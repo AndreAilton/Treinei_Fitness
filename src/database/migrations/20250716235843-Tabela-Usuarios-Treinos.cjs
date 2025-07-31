@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Criação da tabela de usuários
-    await queryInterface.createTable('UsuariosTreino', {
+    await queryInterface.createTable("UsuariosTreino", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,23 +13,23 @@ module.exports = {
       id_Usuario: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true, // Permite múltiplas relações para o mesmo usuário
+        unique: true, // Garante que cada usuário só possa receber um treino por vez
         references: {
-          model: 'Usuarios', // Nome da tabela referenciada   
-          key: 'id', // Chave primária da tabela referenciada
+          model: "Usuarios", // Nome da tabela referenciada
+          key: "id", // Chave primária da tabela referenciada
         },
-        onUpdate: 'CASCADE', // Atualiza em cascata
-        onDelete: 'CASCADE', // Deleta em cascata
+        onUpdate: "CASCADE", // Atualiza em cascata
+        onDelete: "CASCADE", // Deleta em cascata
       },
       id_Treino: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Treinos', // Nome da tabela referenciada
-          key: 'id', // Chave primária da tabela referenciada
+          model: "Treinos", // Nome da tabela referenciada
+          key: "id", // Chave primária da tabela referenciada
         },
-        onUpdate: 'CASCADE', // Atualiza em cascata
-        onDelete: 'CASCADE', // Deleta em cascata
+        onUpdate: "CASCADE", // Atualiza em cascata
+        onDelete: "CASCADE", // Deleta em cascata
       },
       ativo: {
         type: Sequelize.BOOLEAN,
@@ -39,20 +39,20 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Define um valor padrão
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"), // Define um valor padrão
       },
-      
+
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'), // Atualiza automaticamente
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        onUpdate: Sequelize.literal("CURRENT_TIMESTAMP"), // Atualiza automaticamente
       },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
     // Remoção da tabela de usuários
-    await queryInterface.dropTable('UsuariosTreino');
+    await queryInterface.dropTable("UsuariosTreino");
   },
 };
