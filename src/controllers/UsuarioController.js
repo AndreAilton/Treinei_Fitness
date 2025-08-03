@@ -1,5 +1,8 @@
 import Usuarios from "../models/Usuario.js";
-
+import UsuariosTreino from "../models/UsuariosTreino.js";
+import TreinoDia from "../models/TreinoDia.js";
+import Treino from "../models/Treino.js";
+import Exercicio from "../models/Exercicio.js";
 class UserController {
   async store(req, res) {
     try {
@@ -45,10 +48,38 @@ class UserController {
         .status(403)
         .json({ success: false, message: "Acesso restrito a usuários." });
     }
-    
+
     try {
       const user = await Usuarios.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
+        include: [
+          {
+            model: UsuariosTreino,
+            as: "usuarios_treino",
+            attributes: ["id"],
+            include: [
+              {
+                model: Treino,
+                as: "treino",
+                attributes: ["id", "nome"],
+                include: [
+                  {
+                    model: TreinoDia,
+                    as: "treinos_dia",
+                    attributes: ["id", "Dia_da_Semana", "Series", "Repeticoes", "Descanso" ],
+                    include: [
+                      {
+                        model: Exercicio,
+                        as: "exercicio",
+                        attributes: ["id", "nome", "descricao"],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       });
       if (!user) {
         return res

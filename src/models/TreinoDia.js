@@ -48,4 +48,8 @@ export default class TreinoDia extends Model {
     );
     return this;
   }
-}
+  static associate(models) {
+    this.belongsTo(models.Treino, { foreignKey: "id_Treino", as: "treino" });
+    this.belongsTo(models.Exercicio, { foreignKey: "id_Exercicio", as: "exercicio" });
+  } 
+ }
