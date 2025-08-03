@@ -1,6 +1,9 @@
 import Treinador from "../models/Treinador.js";
 import Exercicio from "../models/Exercicio.js";
 import Treino from "../models/Treino.js";
+import UsuariosTreino from "../models/UsuariosTreino.js";
+import Usuarios from "../models/Usuario.js";
+
 
 class TreinadorController {
   async store(req, res) {
@@ -30,6 +33,7 @@ class TreinadorController {
     try {
       const treinadores = await Treinador.findAll({
         attributes: ["id", "nome", "email", "status"],
+        where: { id_Treinador: req.treinadorId },
       });
       return res.status(200).json({ success: true, treinadores });
     } catch (e) {
@@ -58,6 +62,24 @@ class TreinadorController {
           {
             model: Treino,
             as: "treinos",
+            attributes: ["id", "nome"],
+          },
+          {
+            model: UsuariosTreino,
+            as: "usuarios_treino",
+            attributes: ['id'],
+            include: [
+              {
+                model: Treino,
+                as: "treino",
+                attributes: ["id", "nome"],
+              },
+              {
+                model: Usuarios,
+                as: "usuario",
+                attributes: ["id", "nome", "email"],
+              },
+            ],
           },
         ],
       });

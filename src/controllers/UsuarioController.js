@@ -40,6 +40,12 @@ class UserController {
   }
 
   async show(req, res) {
+    if (req.tipo !== "usuario") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a usuários." });
+    }
+    
     try {
       const user = await Usuarios.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],

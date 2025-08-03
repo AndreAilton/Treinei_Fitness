@@ -3,7 +3,10 @@ import UsuariosTreino from "../models/UsuariosTreino.js";
 class UsuariosTreinoController {
   async store(req, res) {
     try {
-      const novoUsuariosTreino = await UsuariosTreino.create(req.body);
+      const novoUsuariosTreino = await UsuariosTreino.create({
+        ...req.body,
+        id_Treinador: req.treinadorId,
+      });
       return res
         .status(200)
         .json({ success: true, usuariosTreino: novoUsuariosTreino });
@@ -20,7 +23,9 @@ class UsuariosTreinoController {
 
   async index(req, res) {
     try {
-      const usuariosTreinos = await UsuariosTreino.findAll();
+      const usuariosTreinos = await UsuariosTreino.findAll({
+        where: { id_Treinador: req.treinadorId },
+      });
       return res.status(200).json({ success: true, usuariosTreinos });
     } catch (e) {
       return res

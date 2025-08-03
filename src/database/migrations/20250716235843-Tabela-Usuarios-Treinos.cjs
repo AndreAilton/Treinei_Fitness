@@ -31,6 +31,16 @@ module.exports = {
         onUpdate: "CASCADE", // Atualiza em cascata
         onDelete: "CASCADE", // Deleta em cascata
       },
+      id_Treinador: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Treinador", // Nome da tabela referenciada
+          key: "id", // Chave primária da tabela referenciada
+        },
+        onUpdate: "CASCADE", // Atualiza em cascata
+        onDelete: "CASCADE", // Deleta em cascata
+      },
       ativo: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
