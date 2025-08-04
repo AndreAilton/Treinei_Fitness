@@ -22,6 +22,12 @@ class UsuariosTreinoController {
   }
 
   async index(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
+    
     try {
       const usuariosTreinos = await UsuariosTreino.findAll({
         where: { id_Treinador: req.treinadorId },

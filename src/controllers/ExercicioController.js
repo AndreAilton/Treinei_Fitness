@@ -19,6 +19,11 @@ class ExercicioController {
   }
 
   async index(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
       const exercicios = await Exercicio.findAll();
       return res.status(200).json({ success: true, exercicios });
@@ -34,6 +39,7 @@ class ExercicioController {
   }
 
   async show(req, res) {
+    
     try {
       const exercicio = await Exercicio.findByPk(req.params.id);
       if (!exercicio) {

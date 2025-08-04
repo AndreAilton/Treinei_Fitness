@@ -1,4 +1,5 @@
 import TreinoDia from "../models/TreinoDia.js";
+import Treino from "../models/Treino.js";
 
 class TreinoDiaController {
   async store(req, res) {
@@ -6,28 +7,38 @@ class TreinoDiaController {
       const novoTreinoDia = await TreinoDia.create(req.body);
       return res.status(200).json({ success: true, treinoDia: novoTreinoDia });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao criar treino do dia",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar treino do dia",
+        error: e.message,
+      });
     }
   }
 
   async index(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
-      const treinosDia = await TreinoDia.findAll();
+      const treinosDia = await TreinoDia.findAll({
+        include: [
+          {
+            model: Treino,
+            as: "treino",
+            where: { id_treinador: req.treinadorId },
+            attributes: [], // Não retorna dados do treino, só filtra
+          },
+        ],
+      });
       return res.status(200).json({ success: true, treinosDia });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao listar treinos do dia",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao listar treinos do dia",
+        error: e.message,
+      });
     }
   }
 
@@ -41,13 +52,11 @@ class TreinoDiaController {
       }
       return res.status(200).json({ success: true, treinoDia });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao buscar treino do dia",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao buscar treino do dia",
+        error: e.message,
+      });
     }
   }
 
@@ -62,13 +71,11 @@ class TreinoDiaController {
       await treinoDia.update(req.body);
       return res.status(200).json({ success: true, treinoDia });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao atualizar treino do dia",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao atualizar treino do dia",
+        error: e.message,
+      });
     }
   }
 
@@ -85,13 +92,11 @@ class TreinoDiaController {
         .status(200)
         .json({ success: true, message: "Treino do dia removido" });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao remover treino do dia",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao remover treino do dia",
+        error: e.message,
+      });
     }
   }
 }

@@ -9,28 +9,33 @@ class TreinoController {
       });
       return res.status(200).json({ success: true, treino: novoTreino });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao criar treino",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar treino",
+        error: e.message,
+      });
     }
   }
 
   async index(req, res) {
+    if (req.tipo !== "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a treinadores." });
+    }
     try {
-      const treinos = await Treino.findAll();
+      const treinos = await Treino.findAll(
+        {
+          where: { id_treinador: req.treinadorId }
+        }
+      );
       return res.status(200).json({ success: true, treinos });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao listar treinos",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao listar treinos",
+        error: e.message,
+      });
     }
   }
 
@@ -44,13 +49,11 @@ class TreinoController {
       }
       return res.status(200).json({ success: true, treino });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao buscar treino",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao buscar treino",
+        error: e.message,
+      });
     }
   }
 
@@ -65,13 +68,11 @@ class TreinoController {
       await treino.update(req.body);
       return res.status(200).json({ success: true, treino });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao atualizar treino",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao atualizar treino",
+        error: e.message,
+      });
     }
   }
 
@@ -88,13 +89,11 @@ class TreinoController {
         .status(200)
         .json({ success: true, message: "Treino removido" });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao remover treino",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao remover treino",
+        error: e.message,
+      });
     }
   }
 }
