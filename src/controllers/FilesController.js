@@ -38,20 +38,21 @@ class FileController {
       }
 
       try {
+
         const { originalname, filename } = req.file;
         const category = req.body.Category;
-        const user_id = req.treinadorId;
-        console.log(req.body.Category)
-        
-        console.log({ originalname, filename, id_treinador, category })
-        console.log(id_treinador)
-        const File = await file.create({ originalname, filename, id_treinador, category });
+        const id_treinador = req.treinadorId;
 
+        console.log(filename,originalname, category, id_treinador)
+
+    
+
+      const File = await file.create({ originalname, filename, id_treinador, category });
         if(req.body.Category) {
           if (req.body.Category) {
 
             const userDir = resolve(__dirname, '..', '..', 'uploads', 'images', `${req.treinadorId}`,'nocategory', filename)
-            const categoryDir = resolve(__dirname, '..', '..', 'uploads', 'images', `${user_id}`, `${req.body.Category}`);
+            const categoryDir = resolve(__dirname, '..', '..', 'uploads', 'images', `${id_treinador}`, `${req.body.Category}`);
 
             if (!fs.existsSync(categoryDir)) {
               fs.mkdirSync(categoryDir, { recursive: true });
@@ -72,11 +73,7 @@ class FileController {
  async storeWithoutMulter(req, res) {
     try {
       const { originalname, filename, category } = req.body;
-      const id_treinador = req.treinadorId;
 
-      
-
-      const File = await file.create({ originalname, filename, id_treinador, category });
 
       return res.json(File);
     } catch (e) {
@@ -171,7 +168,7 @@ class FileController {
     try {
       const { id } = req.params;
       const File = await file.findByPk(id);
-      if (req.userId !== File.dataValues.user_id) {
+      if (req.userId !== File.dataValues.id_treinador) {
         return res.status(400).json({
           errors: ['Foto nao encontrada'],
         });
