@@ -7,6 +7,7 @@ import ExercicioRoutes from "./ExercicioRoutes.js";
 import TreinoRoutes from "./TreinoRoutes.js";
 import TreinoDiaRoutes from "./TreinoDiaRoutes.js";
 import UsuarioTreino from "./UsuariosTreinoRoutes.js";
+import FileRoutes from "./FilesRotues.js";
 
 const router = Router();
 
@@ -21,6 +22,8 @@ router.use("/exercicios", ExercicioRoutes);
 router.use("/treinos", TreinoRoutes);
 router.use("/treinos-dias", TreinoDiaRoutes);
 router.use("/usuario-treino", UsuarioTreino);
+router.use("/files", FileRoutes);
+
 // Rota para 404
 router.use("*", (req, res) => res.status(404).json({ error: "Página Não Encontrada" }));
 
