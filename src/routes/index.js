@@ -7,7 +7,7 @@ import ExercicioRoutes from "./ExercicioRoutes.js";
 import TreinoRoutes from "./TreinoRoutes.js";
 import TreinoDiaRoutes from "./TreinoDiaRoutes.js";
 import UsuarioTreino from "./UsuariosTreinoRoutes.js";
-import FileRoutes from "./FilesRotues.js";
+import FileRoutes from "./FilesRoutes.js";
 
 const router = Router();
 

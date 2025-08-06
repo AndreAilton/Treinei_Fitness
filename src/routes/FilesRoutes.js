@@ -7,6 +7,6 @@ const router = new Router();
 router.post('/', LoginRequire, File.store);
 router.delete('/:id', LoginRequire, File.delete);
 router.put('/:id', LoginRequire, File.update);
-router.get('/:id', LoginRequire, File.show);
+router.get('/:id', File.show);
 
 export default router;

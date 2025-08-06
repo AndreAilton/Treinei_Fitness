@@ -34,7 +34,7 @@ export default class Files extends Model {
       url: {
         type: Sequelize.VIRTUAL,
         get() {
-          return `${process.env.APP_URL}/images/${this.user_id}/${this.category || 'nocategory'}/${this.filename}`;
+          return `${process.env.APP_URL}/Videos/${this.id_treinador}/${this.category || 'nocategory'}/${this.filename}`;
         },
       }
     }, {
