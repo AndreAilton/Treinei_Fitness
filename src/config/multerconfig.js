@@ -12,9 +12,9 @@ export default {
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       "video/mp4",
-      "video/quicktime", // mov
-      "video/x-msvideo", // avi
-      "video/x-matroska", // mkv
+      "video/quicktime",
+      "video/x-msvideo",
+      "video/x-matroska",
     ];
     if (!allowedTypes.includes(file.mimetype)) {
       return cb(
@@ -30,22 +30,19 @@ export default {
       const uploadsDir = process.env.UPLOADS_PATH || resolve(__dirname, "..", "..", "uploads");
       const videosDir = resolve(uploadsDir, "videos");
       const userDir = resolve(videosDir, `${req.userId}`);
-      const nocategoryDir = resolve(userDir, "nocategory");
+      
+      // Pega categoria do body (fallback: "nocategory")
+      const categoria = req.body?.Categoria || "nocategory";
+      const categoryDir = resolve(userDir, categoria);
 
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir);
-      }
-      if (!fs.existsSync(videosDir)) {
-        fs.mkdirSync(videosDir);
-      }
-      if (!fs.existsSync(userDir)) {
-        fs.mkdirSync(userDir);
-      }
-      if (!fs.existsSync(nocategoryDir)) {
-        fs.mkdirSync(nocategoryDir);
-      }
+      // Cria as pastas, se necessário
+      if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+      if (!fs.existsSync(videosDir)) fs.mkdirSync(videosDir);
+      if (!fs.existsSync(userDir)) fs.mkdirSync(userDir);
+      if (!fs.existsSync(categoryDir)) fs.mkdirSync(categoryDir);
 
-      cb(null, nocategoryDir);
+      // Define a pasta de destino como a pasta da categoria
+      cb(null, categoryDir);
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}_${aleatorio()}${extname(file.originalname)}`);

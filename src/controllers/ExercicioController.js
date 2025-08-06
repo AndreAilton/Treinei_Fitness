@@ -6,82 +6,59 @@ import multerConfig from "../config/multerconfig.js";
 const upload = multer(multerConfig).single("file");
 
 class ExercicioController {
-  async store(req, res) {
 
+ async store(req, res) {
+upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro no upload",
+        error: err.code,
+      });
+    }
 
     try {
-    //   console.log({...req.body, id_treinador: req.treinadorId })
-    //   return res.status(200).json({ success: true, message: "Exercício criado com sucesso" });
-      const novoExercicio = await Exercicio.create({...req.body, id_treinador: req.treinadorId });
-      return res.status(200).json({ success: true, exercicio: novoExercicio });
+      const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } = req.body;
+      const id_treinador = req.treinadorId;
+
+      if (!req.file) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Arquivo não enviado" });
+      }
+
+      const { originalname, filename } = req.file;
+
+      const novoExercicio = await Exercicio.create({
+        nome,
+        Categoria,
+        Grupo_Muscular,
+        Descricao,
+        Aparelho,
+        id_treinador,
+      });
+
+      const novoArquivo = await File.create({
+        originalname,
+        filename,
+        id_exercicio: novoExercicio.id,
+        id_treinador,
+        category: Categoria || "nocategory",
+      });
+
+      return res.status(201).json({
+        success: true,
+        exercicio: novoExercicio,
+        video: novoArquivo,
+      });
     } catch (e) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Erro ao criar exercício",
-          error: e.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar exercício com vídeo",
+        error: e.message,
+      });
     }
-  }
-
- async store2(req, res) {
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: "Erro no upload",
-          error: err.code,
-        });
-      }
-
-      try {
-        const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } = req.body;
-        const id_treinador = req.treinadorId;
-
-        if (!req.file) {
-          return res
-            .status(400)
-            .json({ success: false, message: "Arquivo não enviado" });
-        }
-
-        const { originalname, filename } = req.file;
-
-        const novoExercicio = await Exercicio.create({
-          nome,
-          Categoria,
-          Grupo_Muscular,
-          Descricao,
-          Aparelho,
-          id_treinador
-        });
-
-
-        
-
-        const novoArquivo = await File.create({
-          originalname,
-          filename,
-          id_exercicio: novoExercicio.id,
-          id_treinador,
-          category: Categoria || "nocategory",
-        });
-
-
-
-        return res.status(201).json({
-          success: true,
-          exercicio: novoExercicio,
-          video: novoArquivo,
-        });
-      } catch (e) {
-        return res.status(400).json({
-          success: false,
-          message: "Erro ao criar exercício com vídeo",
-          error: e.message,
-        });
-      }
-    });
+  });
   }
 
 
