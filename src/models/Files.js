@@ -27,6 +27,13 @@ export default class Files extends Model {
         defaultValue: 'nocategory',
       
       },
+      id_exercicio: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Exercicios',
+          key: 'id',
+        },
+      },
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

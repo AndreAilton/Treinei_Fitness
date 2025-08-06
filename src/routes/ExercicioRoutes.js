@@ -4,7 +4,7 @@ import ExercicioController from "../controllers/ExercicioController.js";
 
 const router = express.Router();
 
-router.post("/", LoginRequire, ExercicioController.store);
+router.post("/", LoginRequire, ExercicioController.store2);
 router.get("/", LoginRequire, ExercicioController.index);
 router.get("/:id", LoginRequire, ExercicioController.show);
 router.put("/:id", LoginRequire, ExercicioController.update);

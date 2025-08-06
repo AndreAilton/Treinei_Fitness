@@ -23,6 +23,14 @@ module.exports = {
           key: "id", // Chave primária da tabela referenciada
         },
       },
+      id_exercicio: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "Exercicios", // Nome da tabela referenciada
+          key: "id", // Chave primária da tabela referenciada
+        },
+      },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

@@ -38,7 +38,7 @@ class FileController {
 
       try {
         const { originalname, filename } = req.file;
-        const category = req.body.Category;
+        const category = req.body.Categoria;
         const id_treinador = req.treinadorId;
 
         // Garante que as pastas uploads e videos existem
@@ -58,7 +58,7 @@ class FileController {
           category,
         });
 
-        if (req.body.Category) {
+        if (req.body.Categoria) {
           const userDir = resolve(
             videosDir,
             `${req.treinadorId}`,
@@ -68,7 +68,7 @@ class FileController {
           const categoryDir = resolve(
             videosDir,
             `${id_treinador}`,
-            `${req.body.Category}`
+            `${req.body.Categoria}`
           );
 
           if (!fs.existsSync(categoryDir)) {
@@ -85,17 +85,6 @@ class FileController {
         });
       }
     });
-  }
-  async storeWithoutMulter(req, res) {
-    try {
-      const { originalname, filename, category } = req.body;
-
-      return res.json(File);
-    } catch (e) {
-      return res.status(400).json({
-        errors: ["Usuario Invalido"],
-      });
-    }
   }
 
   async delete(req, res) {
@@ -161,7 +150,7 @@ class FileController {
           errors: ["Foto nao encontrada"],
         });
       }
-      if (req.body.category === File.category) {
+      if (req.body.categoria === File.category) {
         File.update(req.body);
         return res
           .status(200)
