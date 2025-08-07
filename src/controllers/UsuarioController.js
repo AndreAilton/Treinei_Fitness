@@ -3,6 +3,7 @@ import UsuariosTreino from "../models/UsuariosTreino.js";
 import TreinoDia from "../models/TreinoDia.js";
 import Treino from "../models/Treino.js";
 import Exercicio from "../models/Exercicio.js";
+import Files from "../models/Files.js";
 class UserController {
   async store(req, res) {
     try {
@@ -72,6 +73,13 @@ class UserController {
                         model: Exercicio,
                         as: "exercicio",
                         attributes: ["id", "nome", "descricao"],
+                        include: [
+                          {
+                            model: Files,
+                            as: "videos",
+                            attributes: ["id", "originalname", "filename", "url"],
+                          },
+                        ],
                       },
                     ],
                   },

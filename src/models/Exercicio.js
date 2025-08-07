@@ -23,7 +23,7 @@ export default class Exercicio extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        Aperelho: DataTypes.STRING,
+        Aparelho: DataTypes.STRING,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
       },
@@ -39,6 +39,7 @@ export default class Exercicio extends Model {
   static associate(models) {
     // Associa a tarefa com o usuário
     this.belongsTo(models.Admins, { foreignKey: 'id_treinador' });
+    this.hasMany(models.Files, { foreignKey: 'id_exercicio', as: 'videos' });
   }
 }
 

@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      Aperelho: {
+      Aparelho: {
         type: Sequelize.STRING,
         allowNull: true,
       },

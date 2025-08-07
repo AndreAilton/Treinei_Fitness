@@ -21,6 +21,7 @@ upload(req, res, async (err) => {
       const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } = req.body;
       const id_treinador = req.treinadorId;
 
+
       if (!req.file) {
         return res
           .status(400)
@@ -37,6 +38,7 @@ upload(req, res, async (err) => {
         Aparelho,
         id_treinador,
       });
+
 
       const novoArquivo = await File.create({
         originalname,
