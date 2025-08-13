@@ -1,20 +1,20 @@
 services:
-  # api:
-  #   container_name: minha-api
-  #   restart: always
-  #   build: .
-  #   ports:
-  #     - "4000:3000"
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - mariadb  
-  #   networks:
-  #     - minha-rede
+  api:
+    container_name: minha-api-fitness-app
+    restart: always
+    build: .
+    ports:
+      - "4000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mariadb  
+    networks:
+      - minha-rede
   mariadb:
     image: mariadb
     restart: always
-    container_name: bdagenda1
+    container_name: bdfitnessapp
     ports:
       - "${DB_PORT}:3306"
     environment:
@@ -25,5 +25,4 @@ services:
 
 volumes:
   mariadb_data:
-
 
