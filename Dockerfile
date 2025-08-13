@@ -1,20 +1,24 @@
-# 1 - Escolher imagem base (Node LTS)
+# Base Node LTS
 FROM node:20
 
-# 2 - Definir pasta de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# 3 - Copiar package.json e package-lock.json primeiro (para aproveitar cache de dependências)
+# Copiar package.json e package-lock.json
 COPY package*.json ./
 
-# 4 - Instalar dependências
+# Instalar dependências
 RUN npm install
 
-# 5 - Copiar todo o projeto para dentro do container
+# Copiar todo o projeto
 COPY . .
 
-# 6 - Expor a porta que o Express usa
+# Copiar wait-for-it
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+# Expor porta do Express
 EXPOSE 3000
 
-# 7 - Comando padrão para iniciar a API
-CMD ["npm", "run", "dev"]
+# Comando default (espera banco e inicia API)
+CMD ["./wait-for-it.sh", "mariadb:3306", "--", "npm", "run", "start"]
