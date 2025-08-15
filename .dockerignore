@@ -1,0 +1,30 @@
+# Node modules locais
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Logs
+*.log
+logs
+debug.log
+
+# Dados temporários
+tmp
+temp
+*.tmp
+
+# Ambiente local
+.env
+.env.local
+.env.*.local
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Uploads locais (se não quiser subir pro container)
+uploads
+
+# Git
+.git
+.gitignore

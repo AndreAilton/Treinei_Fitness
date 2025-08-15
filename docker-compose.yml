@@ -1,51 +1,38 @@
-version: "3.8"
-
 services:
   mariadb:
-    image: mariadb:11
-    container_name: bdfitnessapp
+    image: mariadb
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: fitness_app
-      MYSQL_USER: andre
-      MYSQL_PASSWORD: andre
+    container_name: bd-FitnessApp
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - minha-rede
 
-  migrate:
-    build: .
-    container_name: migrate-api
-    env_file:
-      - .env
-    depends_on:
-      - mariadb
-    networks:
-      - minha-rede
-    command: ["./wait-for-it.sh", "mariadb:3306", "--", "npx", "sequelize", "db:migrate"]
-
   api:
     build: .
-    container_name: minha-api-fitness-app
+    container_name: api-FitnessApp
     restart: always
     ports:
-      - "4000:3000"
+      - "${API_PORT}:3000"
     env_file:
       - .env
+
+    volumes:
+      - ./uploads:/app/uploads
     depends_on:
       - mariadb
-      - migrate
     networks:
       - minha-rede
-    command: ["./wait-for-it.sh", "mariadb:3306", "--", "npm", "run", "start"]
+    command: >
+      sh -c "npx sequelize db:migrate && npm run dev"
 
 volumes:
   mariadb_data:
 
 networks:
   minha-rede:
-    driver: bridge

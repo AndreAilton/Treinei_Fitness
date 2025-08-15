@@ -4,7 +4,6 @@ import Treino from "../models/Treino.js";
 import UsuariosTreino from "../models/UsuariosTreino.js";
 import Usuarios from "../models/Usuario.js";
 
-
 class TreinadorController {
   async store(req, res) {
     try {
@@ -52,12 +51,21 @@ class TreinadorController {
         .json({ success: false, message: "Acesso restrito a treinadores." });
     }
     try {
+      const host = process.env.APP_URL || "http://localhost:4000";
+
       const treinador = await Treinador.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
         include: [
           {
             model: Exercicio,
             as: "exercicios",
+            include: [
+              {
+                model: Exercicio.associations.videos.target, // Associa o model File
+                as: "videos",
+                attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
+              },
+            ],
           },
           {
             model: Treino,
@@ -83,6 +91,7 @@ class TreinadorController {
           },
         ],
       });
+
       if (!treinador) {
         return res
           .status(404)
@@ -93,7 +102,26 @@ class TreinadorController {
           .status(400)
           .json({ success: false, message: "Treinador desativado" });
       }
-      return res.status(200).json({ success: true, treinador });
+
+      // Adiciona a URL dinâmica para todos os vídeos de cada exercício
+      const exerciciosComVideos = treinador.exercicios.map((ex) => {
+        const videosComUrl = ex.videos.map((video) => ({
+          ...video.toJSON(),
+          url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+        }));
+        return {
+          ...ex.toJSON(),
+          videos: videosComUrl,
+        };
+      });
+
+      return res.status(200).json({
+        success: true,
+        treinador: {
+          ...treinador.toJSON(),
+          exercicios: exerciciosComVideos,
+        },
+      });
     } catch (e) {
       return res.status(400).json({
         success: false,

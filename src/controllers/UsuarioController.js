@@ -4,6 +4,7 @@ import TreinoDia from "../models/TreinoDia.js";
 import Treino from "../models/Treino.js";
 import Exercicio from "../models/Exercicio.js";
 import Files from "../models/Files.js";
+
 class UserController {
   async store(req, res) {
     try {
@@ -51,6 +52,8 @@ class UserController {
     }
 
     try {
+      const host = process.env.APP_URL || "http://localhost:4000";
+
       const user = await Usuarios.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
         include: [
@@ -67,7 +70,7 @@ class UserController {
                   {
                     model: TreinoDia,
                     as: "treinos_dia",
-                    attributes: ["id", "Dia_da_Semana", "Series", "Repeticoes", "Descanso" ],
+                    attributes: ["id", "Dia_da_Semana", "Series", "Repeticoes", "Descanso"],
                     include: [
                       {
                         model: Exercicio,
@@ -77,7 +80,7 @@ class UserController {
                           {
                             model: Files,
                             as: "videos",
-                            attributes: ["id", "originalname", "filename", "url"],
+                            attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
                           },
                         ],
                       },
@@ -89,6 +92,7 @@ class UserController {
           },
         ],
       });
+
       if (!user) {
         return res
           .status(404)
@@ -99,7 +103,42 @@ class UserController {
           .status(400)
           .json({ success: false, message: "Usuário desativado" });
       }
-      return res.status(200).json({ success: true, user });
+
+      // Adiciona URL dinâmica em todos os vídeos
+      const usuariosTreinoComVideo = user.usuarios_treino.map((ut) => {
+        const treino = ut.treino;
+        const treinosDiaComVideo = treino.treinos_dia.map((td) => {
+          const exercicio = td.exercicio;
+          const videosComUrl = exercicio.videos.map((video) => ({
+            ...video.toJSON(),
+            url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+          }));
+
+          return {
+            ...td.toJSON(),
+            exercicio: {
+              ...exercicio.toJSON(),
+              videos: videosComUrl, // mantém o array de vídeos original com URLs
+            },
+          };
+        });
+
+        return {
+          ...ut.toJSON(),
+          treino: {
+            ...treino.toJSON(),
+            treinos_dia: treinosDiaComVideo,
+          },
+        };
+      });
+
+      return res.status(200).json({
+        success: true,
+        user: {
+          ...user.toJSON(),
+          usuarios_treino: usuariosTreinoComVideo,
+        },
+      });
     } catch (e) {
       return res.status(400).json({
         success: false,

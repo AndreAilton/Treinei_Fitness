@@ -7,6 +7,7 @@ class UsuariosTreinoController {
         ...req.body,
         id_Treinador: req.treinadorId,
       });
+
       return res
         .status(200)
         .json({ success: true, usuariosTreino: novoUsuariosTreino });
@@ -15,8 +16,7 @@ class UsuariosTreinoController {
         .status(400)
         .json({
           success: false,
-          message: "Erro ao criar relação usuário-treino",
-          error: e.message,
+          message: "Erro ao criar relação usuário-treino"
         });
     }
   }
