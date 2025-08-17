@@ -8,7 +8,9 @@ import TreinoDia from "../models/TreinoDia.js";
 import UsuariosTreino from "../models/UsuariosTreino.js"; 
 import Files from "../models/Files.js";
 
+
 const models = [Usuario, Treinador, Exercicio, Treino, TreinoDia, UsuariosTreino, Files];
+
 const connection = new Sequelize(databaseConfig);
 
 (async () => {

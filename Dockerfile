@@ -1,18 +1,19 @@
 FROM node:20
 
-# Definir diretório de trabalho no container
 WORKDIR /app
 
-# Copiar package.json e package-lock.json
 COPY package*.json ./
 
-# Instalar dependências
 RUN npm install
 
-# Copiar o restante dos arquivos
+# Instalar netcat corretamente
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 COPY . .
 
-# Expor a porta que sua API usa
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 3000
 
-# Comando para iniciar a API
+ENTRYPOINT ["/app/entrypoint.sh"]
