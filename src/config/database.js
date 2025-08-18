@@ -17,4 +17,8 @@ export default {
     timestamps: true,
     underscored: true,
   },
+  dialectOptions: {
+    allowPublicKeyRetrieval: true, // 👈 necessário p/ MySQL 8
+    ssl: false                     // garante que não tenta SSL à toa
+  }
 };
