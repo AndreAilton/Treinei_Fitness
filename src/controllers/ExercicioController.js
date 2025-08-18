@@ -47,7 +47,9 @@ class ExercicioController {
           category: Categoria || "nocategory",
         });
 
-        const host = process.env.APP_URL || "http://localhost:4000";
+        const API_HOST = process.env.API_HOST
+        const API_PORT = process.env.API_PORT
+        const host = `${API_HOST}:${API_PORT}`;
 
         // Inclui a URL diretamente no arquivo criado
         const videoComUrl = {

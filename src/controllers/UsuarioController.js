@@ -52,7 +52,9 @@ class UserController {
     }
 
     try {
-      const host = process.env.APP_URL || "http://localhost:4000";
+      const API_HOST = process.env.API_HOST;
+      const API_PORT = process.env.API_PORT;
+      const host = `${API_HOST}:${API_PORT}`;
 
       const user = await Usuarios.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
@@ -70,7 +72,13 @@ class UserController {
                   {
                     model: TreinoDia,
                     as: "treinos_dia",
-                    attributes: ["id", "Dia_da_Semana", "Series", "Repeticoes", "Descanso"],
+                    attributes: [
+                      "id",
+                      "Dia_da_Semana",
+                      "Series",
+                      "Repeticoes",
+                      "Descanso",
+                    ],
                     include: [
                       {
                         model: Exercicio,
@@ -80,7 +88,14 @@ class UserController {
                           {
                             model: Files,
                             as: "videos",
-                            attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
+                            attributes: [
+                              "id",
+                              "originalname",
+                              "filename",
+                              "category",
+                              "id_exercicio",
+                              "id_treinador",
+                            ],
                           },
                         ],
                       },
@@ -111,7 +126,9 @@ class UserController {
           const exercicio = td.exercicio;
           const videosComUrl = exercicio.videos.map((video) => ({
             ...video.toJSON(),
-            url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+            url: `${host}/Videos/${video.id_treinador}/${
+              video.category || "nocategory"
+            }/${video.filename}`,
           }));
 
           return {

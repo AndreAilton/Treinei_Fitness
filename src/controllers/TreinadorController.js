@@ -51,7 +51,9 @@ class TreinadorController {
         .json({ success: false, message: "Acesso restrito a treinadores." });
     }
     try {
-      const host = process.env.APP_URL || "http://localhost:4000";
+      const API_HOST = process.env.API_HOST;
+      const API_PORT = process.env.API_PORT;
+      const host = `${API_HOST}:${API_PORT}`;
 
       const treinador = await Treinador.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],
@@ -63,7 +65,14 @@ class TreinadorController {
               {
                 model: Exercicio.associations.videos.target, // Associa o model File
                 as: "videos",
-                attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
+                attributes: [
+                  "id",
+                  "originalname",
+                  "filename",
+                  "category",
+                  "id_exercicio",
+                  "id_treinador",
+                ],
               },
             ],
           },
@@ -75,7 +84,7 @@ class TreinadorController {
           {
             model: UsuariosTreino,
             as: "usuarios_treino",
-            attributes: ['id'],
+            attributes: ["id"],
             include: [
               {
                 model: Treino,
@@ -107,7 +116,9 @@ class TreinadorController {
       const exerciciosComVideos = treinador.exercicios.map((ex) => {
         const videosComUrl = ex.videos.map((video) => ({
           ...video.toJSON(),
-          url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+          url: `${host}/Videos/${video.id_treinador}/${
+            video.category || "nocategory"
+          }/${video.filename}`,
         }));
         return {
           ...ex.toJSON(),
