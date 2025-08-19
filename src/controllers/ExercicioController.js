@@ -90,7 +90,7 @@ class ExercicioController {
         ],
       });
 
-      const host = process.env.APP_URL || "http://localhost:4000";
+      const host = process.env.APP_URL
 
       const result = exercicios.map((ex) => {
         const videosComUrl = ex.videos.map((video) => ({
