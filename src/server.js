@@ -8,9 +8,9 @@ if (isDocker) {
   const host = process.env.API_HOST;
   const portname = process.env.API_PORT;
   const port = process.env.PORT || 3000;
-  App.listen(port, () => console.log(`http://${host}:${portname}`));
+  App.listen(port, "0.0.0.0", () => console.log(`http://${host}:${portname}`));
 } else {
   const port = process.env.PORT || 3000;
   const localHost = process.env.DB_HOST_LOCAL;
-  App.listen(port, () => console.log(`http://${localHost}:${port}`));
+  App.listen(port, "0.0.0.0", () => console.log(`http://${localHost}:${port}`));
 }
