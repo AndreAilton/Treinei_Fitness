@@ -11,4 +11,4 @@ npx sequelize db:migrate
 
 
 echo "Iniciando API..."
-npm run start
+npm run dev

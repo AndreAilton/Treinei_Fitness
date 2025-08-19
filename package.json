@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx sequelize db:migrate && nodemon src/server.js",
-    "start": "pm2-runtime src/server.js --name api-FitnessApp",
+    "start": "pm2 start src/server.js --name api-FitnessApp -watch",
     "build-container": "docker compose up --build -d"
   },
   "keywords": [],
