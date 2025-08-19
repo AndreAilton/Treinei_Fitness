@@ -48,8 +48,7 @@ class ExercicioController {
         });
 
         const API_HOST = process.env.API_HOST
-        const API_PORT = process.env.API_PORT
-        const host = `${API_HOST}:${API_PORT}`;
+        const host = `${API_HOST}`;
 
         // Inclui a URL diretamente no arquivo criado
         const videoComUrl = {
