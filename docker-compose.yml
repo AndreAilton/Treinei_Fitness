@@ -4,7 +4,7 @@ services:
     restart: always
     container_name: bd-FitnessApp
     ports:
-      - "${DB_PORT_LOCAL}:3306"   # Host:4010 -> Container:3306
+      - "${DB_PORT_LOCAL}:3306"   
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
