@@ -52,8 +52,8 @@ class UserController {
     }
 
     try {
-        const API_HOST = process.env.API_HOST
-        const host = `${API_HOST}`;
+      const API_HOST = process.env.API_HOST;
+      const host = `${API_HOST}`;
 
       const user = await Usuarios.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],

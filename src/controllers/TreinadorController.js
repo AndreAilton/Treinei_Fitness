@@ -51,8 +51,8 @@ class TreinadorController {
         .json({ success: false, message: "Acesso restrito a treinadores." });
     }
     try {
-        const API_HOST = process.env.API_HOST
-        const host = `${API_HOST}`;
+      const API_HOST = process.env.API_HOST;
+      const host = `${API_HOST}`;
 
       const treinador = await Treinador.findByPk(req.userId, {
         attributes: ["id", "nome", "email", "status"],

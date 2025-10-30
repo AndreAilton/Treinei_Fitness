@@ -19,7 +19,8 @@ class ExercicioController {
       }
 
       try {
-        const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } = req.body;
+        const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } =
+          req.body;
         const id_treinador = req.treinadorId;
 
         if (!req.file) {
@@ -47,13 +48,15 @@ class ExercicioController {
           category: Categoria || "nocategory",
         });
 
-        const API_HOST = process.env.API_HOST
+        const API_HOST = process.env.API_HOST;
         const host = `${API_HOST}`;
 
         // Inclui a URL diretamente no arquivo criado
         const videoComUrl = {
           ...novoArquivo.toJSON(),
-          url: `${host}/Videos/${novoArquivo.id_exercicio}/${novoArquivo.category || "nocategory"}/${novoArquivo.filename}`,
+          url: `${host}/Videos/${novoArquivo.id_exercicio}/${
+            novoArquivo.category || "nocategory"
+          }/${novoArquivo.filename}`,
         };
 
         return res.status(201).json({
@@ -85,17 +88,26 @@ class ExercicioController {
           {
             model: File,
             as: "videos",
-            attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
+            attributes: [
+              "id",
+              "originalname",
+              "filename",
+              "category",
+              "id_exercicio",
+              "id_treinador",
+            ],
           },
         ],
       });
 
-      const host = process.env.APP_URL
+      const host = process.env.APP_URL;
 
       const result = exercicios.map((ex) => {
         const videosComUrl = ex.videos.map((video) => ({
           ...video.toJSON(),
-          url: `${host}/Videos/${req.treinadorId}/${video.category || "nocategory"}/${video.filename}`,
+          url: `${host}/Videos/${req.treinadorId}/${
+            video.category || "nocategory"
+          }/${video.filename}`,
         }));
 
         return {
@@ -121,7 +133,14 @@ class ExercicioController {
           {
             model: File,
             as: "videos",
-            attributes: ["id", "originalname", "filename", "category", "id_exercicio", "id_treinador"],
+            attributes: [
+              "id",
+              "originalname",
+              "filename",
+              "category",
+              "id_exercicio",
+              "id_treinador",
+            ],
           },
         ],
       });
@@ -136,7 +155,9 @@ class ExercicioController {
 
       const videosComUrl = exercicio.videos.map((video) => ({
         ...video.toJSON(),
-        url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+        url: `${host}/Videos/${video.id_treinador}/${
+          video.category || "nocategory"
+        }/${video.filename}`,
       }));
 
       return res.status(200).json({
@@ -212,7 +233,9 @@ class ExercicioController {
           const videosComUrl = [
             {
               ...novoArquivo.toJSON(),
-              url: `${host}/Videos/${novoArquivo.id_exercicio}/${novoArquivo.category || "nocategory"}/${novoArquivo.filename}`,
+              url: `${host}/Videos/${novoArquivo.id_exercicio}/${
+                novoArquivo.category || "nocategory"
+              }/${novoArquivo.filename}`,
             },
           ];
 
@@ -227,7 +250,9 @@ class ExercicioController {
         // Inclui a URL nos vídeos existentes
         const videosComUrl = exercicio.videos.map((video) => ({
           ...video.toJSON(),
-          url: `${host}/Videos/${video.id_treinador}/${video.category || "nocategory"}/${video.filename}`,
+          url: `${host}/Videos/${video.id_treinador}/${
+            video.category || "nocategory"
+          }/${video.filename}`,
         }));
 
         return res.status(200).json({

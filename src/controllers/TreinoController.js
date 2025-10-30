@@ -24,11 +24,9 @@ class TreinoController {
         .json({ success: false, message: "Acesso restrito a treinadores." });
     }
     try {
-      const treinos = await Treino.findAll(
-        {
-          where: { id_treinador: req.treinadorId }
-        }
-      );
+      const treinos = await Treino.findAll({
+        where: { id_treinador: req.treinadorId },
+      });
       return res.status(200).json({ success: true, treinos });
     } catch (e) {
       return res.status(400).json({
