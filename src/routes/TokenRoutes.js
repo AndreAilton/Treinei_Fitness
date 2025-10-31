@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Token from "../controllers/TokenUsuarioController.js";
-import TokenTreinador from "../controllers/TokenTreinadorController.js";
+import Token from "../controllers/Usuario/TokenUsuarioController.js";
+import TokenTreinador from "../controllers/Treinador/TokenTreinadorController.js";
 
 const router = new Router();
 

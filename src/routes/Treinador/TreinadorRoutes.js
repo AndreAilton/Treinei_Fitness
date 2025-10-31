@@ -1,7 +1,7 @@
 // src/routes/TreinadorRoutes.js
 import express from "express";
-import LoginRequire from "../middlewares/TokenRequire.js";
-import TreinadorController from "../controllers/TreinadorController.js";
+import LoginRequire from "../../middlewares/TokenRequire.js";
+import TreinadorController from "../../controllers/Treinador/TreinadorController.js";
 
 const router = express.Router();
 

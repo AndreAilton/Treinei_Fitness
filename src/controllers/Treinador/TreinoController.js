@@ -1,4 +1,4 @@
-import Treino from "../models/Treino.js";
+import Treino from "../../models/Treino.js";
 
 class TreinoController {
   async store(req, res) {

@@ -1,6 +1,6 @@
 import express from "express";
-import LoginRequire from "../middlewares/TokenRequire.js";
-import ExercicioController from "../controllers/ExercicioController.js";
+import LoginRequire from "../../middlewares/TokenRequire.js";
+import ExercicioController from "../../controllers/Treinador/ExercicioController.js";
 
 const router = express.Router();
 

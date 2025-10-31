@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import UserRoutes from "./UsuarioRoutes.js";
-import TreinadorRoutes from "./TreinadorRoutes.js";
+import UserRoutes from "./Usuario/UsuarioRoutes.js";
+import TreinadorRoutes from "./Treinador/TreinadorRoutes.js";
 import TokenRoutes from "./TokenRoutes.js";
-import ExercicioRoutes from "./ExercicioRoutes.js";
-import TreinoRoutes from "./TreinoRoutes.js";
-import TreinoDiaRoutes from "./TreinoDiaRoutes.js";
-import UsuarioTreino from "./UsuariosTreinoRoutes.js";
+import ExercicioRoutes from "./Treinador/ExercicioRoutes.js";
+import TreinoRoutes from "./Treinador/TreinoRoutes.js";
+import TreinoDiaRoutes from "./Treinador/TreinoDiaRoutes.js";
+import UsuarioTreino from "./Usuario/UsuariosTreinoRoutes.js";
 import FileRoutes from "./FilesRoutes.js";
 
 const router = Router();
@@ -25,6 +25,8 @@ router.use("/usuario-treino", UsuarioTreino);
 router.use("/files", FileRoutes);
 
 // Rota para 404
-router.use("*", (req, res) => res.status(404).json({ error: "Página Não Encontrada" }));
+router.use("*", (req, res) =>
+  res.status(404).json({ error: "Página Não Encontrada" })
+);
 
 export default router;

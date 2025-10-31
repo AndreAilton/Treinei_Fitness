@@ -1,7 +1,7 @@
-import Exercicio from "../models/Exercicio.js";
-import File from "../models/Files.js";
+import Exercicio from "../../models/Exercicio.js";
+import File from "../../models/Files.js";
 import multer from "multer";
-import multerConfig from "../config/multerconfig.js";
+import multerConfig from "../../config/multerconfig.js";
 import fs from "fs";
 import path from "path";
 

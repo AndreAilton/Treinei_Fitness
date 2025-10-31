@@ -1,4 +1,4 @@
-import UsuariosTreino from "../models/UsuariosTreino.js";
+import UsuariosTreino from "../../models/UsuariosTreino.js";
 
 class UsuariosTreinoController {
   async store(req, res) {

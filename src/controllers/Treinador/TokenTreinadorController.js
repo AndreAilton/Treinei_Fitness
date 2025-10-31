@@ -1,4 +1,4 @@
-import Treinador from "../models/Treinador.js";
+import Treinador from "../../models/Treinador.js";
 import jwt from "jsonwebtoken";
 
 class TokenTreinadorController {

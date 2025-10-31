@@ -1,5 +1,5 @@
-import TreinoDia from "../models/TreinoDia.js";
-import Treino from "../models/Treino.js";
+import TreinoDia from "../../models/TreinoDia.js";
+import Treino from "../../models/Treino.js";
 
 class TreinoDiaController {
   async store(req, res) {

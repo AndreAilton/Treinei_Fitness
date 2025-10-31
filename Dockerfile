@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y netcat-openbsd
 
 COPY . .
 
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# Converter CRLF para LF e dar permissão de execução
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 EXPOSE 3000
 
