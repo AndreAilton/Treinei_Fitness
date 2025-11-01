@@ -1,10 +1,10 @@
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:11
     restart: always
     container_name: bd-FitnessApp
     ports:
-      - "${DB_PORT_LOCAL}:3306"   
+      - "${DB_PORT_LOCAL}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
@@ -22,9 +22,9 @@ services:
     env_file:
       - .env
     environment:
-      - NODE_ENV=docker  
+      - NODE_ENV=docker
     volumes:
-      - ./uploads:/app/uploads
+      - uploads_data:/app/uploads
     depends_on:
       - mariadb
     networks:
@@ -32,6 +32,7 @@ services:
 
 volumes:
   mariadb_data:
+  uploads_data:
 
 networks:
   minha-rede:

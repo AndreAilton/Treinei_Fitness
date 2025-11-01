@@ -1,19 +1,20 @@
-FROM node:20
+# Imagem base
+FROM node:20-alpine
 
+# Diretório de trabalho dentro do container
 WORKDIR /app
 
+# Copiar arquivos de dependências
 COPY package*.json ./
 
+# Instalar dependências
 RUN npm install
 
-# Instalar netcat corretamente
-RUN apt-get update && apt-get install -y netcat-openbsd
-
+# Copiar o restante do código
 COPY . .
 
-# Converter CRLF para LF e dar permissão de execução
-RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
-
+# Expor a porta da API
 EXPOSE 3000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Comando para iniciar a aplicação
+CMD ["npm", "run", "dev"]
