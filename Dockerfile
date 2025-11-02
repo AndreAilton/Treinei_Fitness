@@ -1,20 +1,15 @@
-# Imagem base
-FROM node:20-alpine
+FROM node:20
 
-# Diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar arquivos de dependências
 COPY package*.json ./
-
-# Instalar dependências
 RUN npm install
 
-# Copiar o restante do código
 COPY . .
 
-# Expor a porta da API
+COPY wait-for.sh /wait-for.sh
+RUN chmod +x /wait-for.sh
+
 EXPOSE 3000
 
-# Comando para iniciar a aplicação
-CMD ["npm", "run", "dev"]
+CMD ["/wait-for.sh", "mariadb:3306", "--", "npm", "run", "start"]
