@@ -54,7 +54,7 @@ class ExercicioController {
         // Inclui a URL diretamente no arquivo criado
         const videoComUrl = {
           ...novoArquivo.toJSON(),
-          url: `${host}/Videos/${novoArquivo.id_exercicio}/${
+          url: `${host}/Videos/${req.treinadorId}/${
             novoArquivo.category || "nocategory"
           }/${novoArquivo.filename}`,
         };
@@ -233,7 +233,7 @@ class ExercicioController {
           const videosComUrl = [
             {
               ...novoArquivo.toJSON(),
-              url: `${host}/Videos/${novoArquivo.id_exercicio}/${
+              url: `${host}/Videos/${req.treinadorId}/${
                 novoArquivo.category || "nocategory"
               }/${novoArquivo.filename}`,
             },
