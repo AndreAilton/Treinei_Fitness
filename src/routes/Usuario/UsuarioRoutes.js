@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/", UserController.store);
 router.get("/", LoginRequire, UserController.show);
-router.get("/:id", LoginRequire, UserController.show);
+router.get("/:telefone", UserController.show);
 router.put("/", LoginRequire, UserController.update);
 router.delete("/", LoginRequire, UserController.destroy);
 

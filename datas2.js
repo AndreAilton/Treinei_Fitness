@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // URL e token
-const apiURL = "http://localhost:4000/treinos-dias";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjIyODIyOCwiZXhwIjoxNzY0ODIwMjI4fQ.txZ1LoziNJ9UxrwBOtC5ONu6L7FOHVQ6xP84SJAJOLM";
+const apiURL = "https://fitnessapi.andreailtondev.tech/treinos-dias";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjIzMDM1MywiZXhwIjoxNzY0ODIyMzUzfQ.LsjZxOtwyVtMUarXABjHW1LvkxrNR-PlI20fzA-a0_w";
 
 // JSON com os dados dos treinos por dia
 const treinosDias = [

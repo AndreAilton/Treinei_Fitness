@@ -12,9 +12,20 @@ class UserController {
       return res.status(200).json({ success: true, user: novoUser });
     } catch (e) {
       if (e.name === "SequelizeUniqueConstraintError") {
+        const field = e.errors && e.errors[0] && e.errors[0].path;
+        if (field === "telefone") {
+          return res
+            .status(400)
+            .json({ errors: ["Este telefone já está cadastrado."] });
+        }
+        if (field === "email") {
+          return res
+            .status(400)
+            .json({ errors: ["Este e-mail já está cadastrado."] });
+        }
         return res
           .status(400)
-          .json({ errors: ["Este e-mail já está cadastrado."] });
+          .json({ errors: e.errors.map((error) => error.message) });
       }
       if (e.name === "SequelizeValidationError") {
         return res
@@ -32,7 +43,7 @@ class UserController {
   async index(req, res) {
     try {
       const usuarios = await Usuarios.findAll({
-        attributes: ["id", "nome", "email", "status"],
+        attributes: ["id", "telefone", "nome", "email", "status"],
       });
       return res.status(200).json({ success: true, usuarios });
     } catch (e) {
@@ -45,67 +56,83 @@ class UserController {
   }
 
   async show(req, res) {
-    if (req.tipo !== "usuario") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Acesso restrito a usuários." });
-    }
-
     try {
       const API_HOST = process.env.API_HOST;
       const host = `${API_HOST}`;
 
-      const user = await Usuarios.findByPk(req.userId, {
-        attributes: ["id", "nome", "email", "status"],
-        include: [
-          {
-            model: UsuariosTreino,
-            as: "usuarios_treino",
-            attributes: ["id"],
-            include: [
-              {
-                model: Treino,
-                as: "treino",
-                attributes: ["id", "nome"],
-                include: [
-                  {
-                    model: TreinoDia,
-                    as: "treinos_dia",
-                    attributes: [
-                      "id",
-                      "Dia_da_Semana",
-                      "Series",
-                      "Repeticoes",
-                      "Descanso",
-                    ],
-                    include: [
-                      {
-                        model: Exercicio,
-                        as: "exercicio",
-                        attributes: ["id", "nome", "descricao"],
-                        include: [
-                          {
-                            model: Files,
-                            as: "videos",
-                            attributes: [
-                              "id",
-                              "originalname",
-                              "filename",
-                              "category",
-                              "id_exercicio",
-                              "id_treinador",
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      });
+      const { telefone } = req.params;
+
+      // define include reutilizável
+      const includeTreinos = [
+        {
+          model: UsuariosTreino,
+          as: "usuarios_treino",
+          attributes: ["id"],
+          include: [
+            {
+              model: Treino,
+              as: "treino",
+              attributes: ["id", "nome"],
+              include: [
+                {
+                  model: TreinoDia,
+                  as: "treinos_dia",
+                  attributes: [
+                    "id",
+                    "Dia_da_Semana",
+                    "Series",
+                    "Repeticoes",
+                    "Descanso",
+                  ],
+                  include: [
+                    {
+                      model: Exercicio,
+                      as: "exercicio",
+                      attributes: ["id", "nome", "descricao"],
+                      include: [
+                        {
+                          model: Files,
+                          as: "videos",
+                          attributes: [
+                            "id",
+                            "originalname",
+                            "filename",
+                            "category",
+                            "id_exercicio",
+                            "id_treinador",
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      // Busca por telefone (rota pública) ou por req.userId (rota autenticada)
+      let user;
+      if (telefone) {
+        user = await Usuarios.findOne({
+          where: { telefone },
+          attributes: ["id", "telefone", "nome", "email", "status"],
+          include: includeTreinos,
+        });
+      } else {
+        // quando chamado sem :telefone, espera-se rota autenticada que define req.userId
+        if (!req.userId) {
+          return res
+            .status(403)
+            .json({ success: false, message: "Acesso restrito." });
+        }
+
+        user = await Usuarios.findByPk(req.userId, {
+          attributes: ["id", "telefone", "nome", "email", "status"],
+          include: includeTreinos,
+        });
+      }
 
       if (!user) {
         return res
@@ -119,11 +146,11 @@ class UserController {
       }
 
       // Adiciona URL dinâmica em todos os vídeos
-      const usuariosTreinoComVideo = user.usuarios_treino.map((ut) => {
-        const treino = ut.treino;
-        const treinosDiaComVideo = treino.treinos_dia.map((td) => {
-          const exercicio = td.exercicio;
-          const videosComUrl = exercicio.videos.map((video) => ({
+      const usuariosTreinoComVideo = (user.usuarios_treino || []).map((ut) => {
+        const treino = ut.treino || {};
+        const treinosDiaComVideo = (treino.treinos_dia || []).map((td) => {
+          const exercicio = td.exercicio || {};
+          const videosComUrl = (exercicio.videos || []).map((video) => ({
             ...video.toJSON(),
             url: `${host}/Videos/${video.id_treinador}/${
               video.category || "nocategory"
@@ -134,7 +161,7 @@ class UserController {
             ...td.toJSON(),
             exercicio: {
               ...exercicio.toJSON(),
-              videos: videosComUrl, // mantém o array de vídeos original com URLs
+              videos: videosComUrl,
             },
           };
         });
@@ -176,6 +203,23 @@ class UserController {
       const { id, nome, email } = user;
       return res.status(200).json({ id, nome, email });
     } catch (e) {
+      if (e.name === "SequelizeUniqueConstraintError") {
+        const field = e.errors && e.errors[0] && e.errors[0].path;
+        if (field === "telefone") {
+          return res
+            .status(400)
+            .json({ errors: ["Este telefone já está cadastrado."] });
+        }
+        if (field === "email") {
+          return res
+            .status(400)
+            .json({ errors: ["Este e-mail já está cadastrado."] });
+        }
+        return res
+          .status(400)
+          .json({ errors: e.errors.map((error) => error.message) });
+      }
+
       return res.status(400).json({
         success: false,
         message: "Erro ao atualizar usuário",
