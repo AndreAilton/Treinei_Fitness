@@ -8,6 +8,7 @@ RUN npm install
 COPY . .
 
 COPY wait-for.sh /wait-for.sh
+RUN sed -i 's/\r$//' /wait-for.sh
 RUN chmod +x /wait-for.sh
 
 EXPOSE 3000
