@@ -15,6 +15,9 @@ COPY . .
 
 # Define variáveis de ambiente (opcional aqui pois podem vir do .env)
 ENV NODE_ENV=docker
+COPY wait-for.sh /wait-for.sh
+RUN sed -i 's/\r$//' /wait-for.sh
+RUN chmod +x /wait-for.sh
 
 # Expondo a porta interna da API
 EXPOSE 3000

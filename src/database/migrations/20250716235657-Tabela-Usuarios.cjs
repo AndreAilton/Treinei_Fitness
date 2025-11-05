@@ -17,6 +17,7 @@ module.exports = {
       telefone: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true, // Garante que o telefone seja único
       },
       email: {
         type: Sequelize.STRING,
