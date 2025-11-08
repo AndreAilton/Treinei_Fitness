@@ -94,5 +94,9 @@ export default class Usuarios extends Model {
       foreignKey: "id_Usuario",
       as: "usuarios_treino",
     });
+    this.hasMany(models.Dietas_Files, { 
+      foreignKey: 'id_usuario',
+      as: 'dietas'
+    });
   }
 }

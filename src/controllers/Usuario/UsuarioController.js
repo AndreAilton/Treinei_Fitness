@@ -4,6 +4,7 @@ import TreinoDia from "../../models/TreinoDia.js";
 import Treino from "../../models/Treino.js";
 import Exercicio from "../../models/Exercicio.js";
 import Files from "../../models/Files.js";
+import DietaFile from "../../models/Dietas_Files.js"; // Adicione este import
 
 class UserController {
   async store(req, res) {
@@ -62,7 +63,7 @@ class UserController {
 
       const { telefone } = req.params;
 
-      // define include reutilizável
+      // define include reutilizável para treinos
       const includeTreinos = [
         {
           model: UsuariosTreino,
@@ -112,16 +113,33 @@ class UserController {
         },
       ];
 
-      // Busca por telefone (rota pública) ou por req.userId (rota autenticada)
+      // define include para dietas
+      const includeDietas = [
+        {
+          model: DietaFile,
+          as: "dietas",
+          attributes: [
+            "id",
+            "originalname",
+            "filename",
+            "descricao",
+            "mime_type",
+            "id_treinador",
+            "status",
+          ],
+          where: { status: true }, // Apenas dietas ativas
+        },
+      ];
+
+      // Busca por telefone ou userId com includes
       let user;
       if (telefone) {
         user = await Usuarios.findOne({
           where: { telefone },
           attributes: ["id", "telefone", "nome", "email", "status"],
-          include: includeTreinos,
+          include: [...includeTreinos, ...includeDietas],
         });
       } else {
-        // quando chamado sem :telefone, espera-se rota autenticada que define req.userId
         if (!req.userId) {
           return res
             .status(403)
@@ -130,7 +148,7 @@ class UserController {
 
         user = await Usuarios.findByPk(req.userId, {
           attributes: ["id", "telefone", "nome", "email", "status"],
-          include: includeTreinos,
+          include: [...includeTreinos, ...includeDietas],
         });
       }
 
@@ -145,7 +163,7 @@ class UserController {
           .json({ success: false, message: "Usuário desativado" });
       }
 
-      // Adiciona URL dinâmica em todos os vídeos
+      // Adiciona URL dinâmica em todos os vídeos (mantém código existente)
       const usuariosTreinoComVideo = (user.usuarios_treino || []).map((ut) => {
         const treino = ut.treino || {};
         const treinosDiaComVideo = (treino.treinos_dia || []).map((td) => {
@@ -175,11 +193,18 @@ class UserController {
         };
       });
 
+      // Adiciona URL dinâmica para dietas
+      const dietasComUrl = (user.dietas || []).map((dieta) => ({
+        ...dieta.toJSON(),
+        url: `${host}/Dietas/${dieta.id_treinador}/${user.id}/${dieta.filename}`,
+      }));
+
       return res.status(200).json({
         success: true,
         user: {
           ...user.toJSON(),
           usuarios_treino: usuariosTreinoComVideo,
+          dietas: dietasComUrl,
         },
       });
     } catch (e) {
