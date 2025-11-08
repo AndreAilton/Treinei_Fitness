@@ -2,7 +2,7 @@ import axios from "axios";
 
 // URL e token
 const apiURL = "https://fitnessapi.andreailtondev.tech/treinos-dias";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjIzMDM1MywiZXhwIjoxNzY0ODIyMzUzfQ.LsjZxOtwyVtMUarXABjHW1LvkxrNR-PlI20fzA-a0_w";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjM0MDYwOCwiZXhwIjoxNzY0OTMyNjA4fQ.2YQDPNp7A7b7JsYS3g1xO_NgkZgaA75QM47BVnQXZVE";
 
 // JSON com os dados dos treinos por dia
 const treinosDias = [

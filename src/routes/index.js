@@ -8,6 +8,7 @@ import TreinoRoutes from "./Treinador/TreinoRoutes.js";
 import TreinoDiaRoutes from "./Treinador/TreinoDiaRoutes.js";
 import UsuarioTreino from "./Usuario/UsuariosTreinoRoutes.js";
 import FileRoutes from "./FilesRoutes.js";
+import DietaRoutes from "./Treinador/DietasFilesRoutes.js";
 
 const router = Router();
 
@@ -23,6 +24,8 @@ router.use("/treinos", TreinoRoutes);
 router.use("/treinos-dias", TreinoDiaRoutes);
 router.use("/usuario-treino", UsuarioTreino);
 router.use("/files", FileRoutes);
+router.use("/dietas", DietaRoutes);
+
 
 // Rota para 404
 router.use("*", (req, res) =>

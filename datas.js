@@ -4,7 +4,7 @@ import fs from "fs";
 
 // URL e token
 const apiURL = "https://fitnessapi.andreailtondev.tech/exercicios";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjIzMDM1MywiZXhwIjoxNzY0ODIyMzUzfQ.LsjZxOtwyVtMUarXABjHW1LvkxrNR-PlI20fzA-a0_w";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3JAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MjQ4Mzc4MiwiZXhwIjoxNzY1MDc1NzgyfQ.r2TjTJqdi_fQAA1UZPT7VJy7pdhxgwSeKQXyacfY18g";
 
 // JSON de exercícios
 const exercicios = [
