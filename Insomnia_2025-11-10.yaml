@@ -1,0 +1,1435 @@
+type: collection.insomnia.rest/5.0
+name: Agenda
+meta:
+  id: wrk_3b5719beeeae439bb1b8a73e77f4d3ae
+  created: 1743452127533
+  modified: 1754083971252
+  description: ""
+collection:
+  - url: "{{ _.base_url }}"
+    name: Bem vindo Api
+    meta:
+      id: req_dc54c04b3a0849c4a7780befc96ed5c6
+      created: 1752865677750
+      modified: 1755250784963
+      isPrivate: false
+      description: ""
+      sortKey: -1752865677750
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://n8n.andreailtondev.tech/webhook-test/9e8914c2-44b6-4d3c-acf0-58c5ef11bb97
+    name: New Request
+    meta:
+      id: req_f017a7a93c0949ed839b8c5cc5fde80d
+      created: 1762232590781
+      modified: 1762340221252
+      isPrivate: false
+      description: ""
+      sortKey: -1762232590781
+    method: POST
+    body:
+      mimeType: application/json
+      text: >
+        {
+          "webhook_id": "wh_1234567890abcdef",
+          "instance": "fitness_bot_instance",
+          "attempt": 1,
+          "events": [
+            {
+              "event": "message",
+              "timestamp": "2025-11-04T02:00:00Z",
+              "data": {
+                "key": {
+                  "remoteJid": "16993356039@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "MSG1-BAE5F9A8F4E8A1C6B0AA",
+                  "participant": null
+                },
+                "pushName": "André Cliente",
+                "message": {
+                  "conversation": "Olá! Gostaria de saber mais sobre o plano Premium."
+                },
+                "messageTimestamp": 1730700000,
+                "type": "chat",
+                "status": "received",
+                "from": "16993356039@s.whatsapp.net",
+                "to": "554799999999@evolution.api"
+              }
+            },
+            {
+              "event": "message",
+              "timestamp": "2025-11-04T02:01:10Z",
+              "data": {
+                "key": {
+                  "remoteJid": "16993356039@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "MSG2-IMG-1A2B3C4D5E",
+                  "participant": null
+                },
+                "pushName": "André Cliente",
+                "message": {
+                  "imageMessage": {
+                    "mimetype": "image/jpeg",
+                    "caption": "Aqui está minha foto da academia",
+                    "url": "https://example.com/imagem-fake.jpg"
+                  }
+                },
+                "messageTimestamp": 1730700070,
+                "type": "image",
+                "status": "received",
+                "from": "16993356039@s.whatsapp.net",
+                "to": "554799999999@evolution.api"
+              }
+            },
+            {
+              "event": "message",
+              "timestamp": "2025-11-04T02:03:30Z",
+              "data": {
+                "key": {
+                  "remoteJid": "16993356039@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "MSG3-PTT-6F7G8H9I0J",
+                  "participant": null
+                },
+                "pushName": "André Cliente",
+                "message": {
+                  "audioMessage": {
+                    "mimetype": "audio/ogg; codecs=opus",
+                    "ptt": true,
+                    "url": "https://example.com/audio-fake.ogg"
+                  }
+                },
+                "messageTimestamp": 1730700210,
+                "type": "audio",
+                "status": "received",
+                "from": "16993356039@s.whatsapp.net",
+                "to": "554799999999@evolution.api"
+              }
+            },
+            {
+              "event": "message",
+              "timestamp": "2025-11-04T02:05:11Z",
+              "data": {
+                "key": {
+                  "remoteJid": "16993356039@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "MSG4-DOC-XYZ123",
+                  "participant": null
+                },
+                "pushName": "André Cliente",
+                "message": {
+                  "documentMessage": {
+                    "mimetype": "application/pdf",
+                    "title": "Atestado Médico.pdf",
+                    "fileName": "atestado_medico.pdf",
+                    "url": "https://example.com/atestado-fake.pdf"
+                  }
+                },
+                "messageTimestamp": 1730700311,
+                "type": "document",
+                "status": "received",
+                "from": "16993356039@s.whatsapp.net",
+                "to": "554799999999@evolution.api"
+              }
+            },
+            {
+              "event": "message_status",
+              "timestamp": "2025-11-04T02:06:20Z",
+              "data": {
+                "id": "MSG5-REPLY-123456",
+                "status": "sent",
+                "recipient": "16993356039@s.whatsapp.net",
+                "msg": "Oi André! Nosso plano Premium inclui treinos personalizados e suporte exclusivo!"
+              }
+            },
+            {
+              "event": "message_status",
+              "timestamp": "2025-11-04T02:06:35Z",
+              "data": {
+                "id": "MSG5-REPLY-123456",
+                "status": "delivered",
+                "recipient": "16993356039@s.whatsapp.net"
+              }
+            },
+            {
+              "event": "message_status",
+              "timestamp": "2025-11-04T02:07:00Z",
+              "data": {
+                "id": "MSG5-REPLY-123456",
+                "status": "read",
+                "recipient": "16993356039@s.whatsapp.net",
+                "readTimestamp": 1730700420
+              }
+            }
+          ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.0.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: ""
+    name: New Request
+    meta:
+      id: req_fdd4bbd41cda4fd4ae5a6f9627c5884c
+      created: 1762543653296
+      modified: 1762543653296
+      isPrivate: false
+      description: ""
+      sortKey: -1762543653296
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.0.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Usuario
+    meta:
+      id: fld_3543796d51d34a97b52bc5d90dd69b1e
+      created: 1743452182673
+      modified: 1743452277650
+      sortKey: -1743452182673
+      description: ""
+    children:
+      - url: "{{ _.base_url }}usuarios"
+        name: Obter
+        meta:
+          id: req_b51d3ce215fd45cd83d6168e17d4f611
+          created: 1743452189175
+          modified: 1762655741968
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuarios"
+        name: Criar
+        meta:
+          id: req_0677534534464991ba8b0a9c1afb5f1d
+          created: 1743452287826
+          modified: 1762316129872
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189125
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Andre Ailton",
+            	"telefone": "16993356039",
+              "email": "andre.ailton.10@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuarios"
+        name: Delete
+        meta:
+          id: req_ff254df293994e728001d8bdf486229d
+          created: 1743452298589
+          modified: 1752867775178
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}token"
+        name: Token
+        meta:
+          id: req_e1e77796819f4b61a7f0f162ba815eff
+          created: 1743452306130
+          modified: 1762569319708
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189025
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Andre Ailton",
+            	"telefone": "16993356039",
+              "email": "andre.ailton.10@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuarios"
+        name: Criar2
+        meta:
+          id: req_ad33d984a196421eb55b6d229c0203cc
+          created: 1762485123374
+          modified: 1762659107343
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189118.75
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Pedro Augusto",
+            	"telefone": "16982246229",
+              "email": "pedroaugustoteste.10@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuarios/16982246229"
+        name: Obter
+        meta:
+          id: req_ab215ba27b0945b4ad5f2ab5e8ac14dd
+          created: 1762570442764
+          modified: 1762659166612
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189150
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: apikey
+          disabled: false
+          key: api_key
+          value: "{{ _.api_key }}"
+          addTo: header
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Treinadores
+    meta:
+      id: fld_9176f07ac1a84104a353fbb4dc5d1707
+      created: 1752867644730
+      modified: 1752964055718
+      sortKey: -1743452182623
+      description: ""
+    children:
+      - url: "{{ _.base_url }}treinadores"
+        name: Obter
+        meta:
+          id: req_3377bff8c90945b1a3078ad0e5ff03be
+          created: 1752867644733
+          modified: 1762573692574
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinadores"
+        name: Criar
+        meta:
+          id: req_582f4dc1c9d94c118f0123712bc8335a
+          created: 1752867644734
+          modified: 1762568633365
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189125
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Treinador 1",
+              "email": "Treinador2@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinadores"
+        name: Delete
+        meta:
+          id: req_910d8c2dc65c417599d84060ac607f81
+          created: 1752867644736
+          modified: 1752867796475
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}token/treinador"
+        name: Token
+        meta:
+          id: req_c3f80c82a3c4416aa6d17139457806bc
+          created: 1752867644738
+          modified: 1762568642979
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189025
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Treinador 1",
+              "email": "Treinador2@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Exercicios
+    meta:
+      id: fld_20a23f146bae407babb3e28ed31a6295
+      created: 1752964003467
+      modified: 1752967048266
+      sortKey: -1743452182573
+      description: ""
+    children:
+      - url: "{{ _.base_url }}exercicios"
+        name: Obter
+        meta:
+          id: req_08f307d98c9c4cc29129e9680d451538
+          created: 1752964003469
+          modified: 1762231091130
+          isPrivate: false
+          description: ""
+          sortKey: -1750588335051
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}exercicios/9"
+        name: Delete
+        meta:
+          id: req_c1960c18ef154493adc38251770f5641
+          created: 1752964003471
+          modified: 1754563692751
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}exercicios/10"
+        name: Alterar
+        meta:
+          id: req_4196364570c04dd4b39dc10628946638
+          created: 1752967050343
+          modified: 1754564190828
+          isPrivate: false
+          description: ""
+          sortKey: -1752967050343
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Remada Curvada",
+              "Categoria": "Força",
+              "Grupo_Muscular": "Costas",
+              "Descricao": "Exercício para espessura das costas e bíceps.",
+              "Aperelho": "Barra",
+              "id_treinador": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}exercicios"
+        name: Criar Com video
+        meta:
+          id: req_e48293c6b9974742aae377bdac803128
+          created: 1754442508703
+          modified: 1762183252087
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189112.5
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: nome
+              value: perna3
+              id: pair_79224960a98840f29586012e44ef5374
+              type: text
+              multiline: false
+              disabled: false
+            - id: pair_109767adbec746b0a4613788a3c84491
+              name: Categoria
+              value: Perna
+              description: ""
+              disabled: false
+            - id: pair_52320aa0ceb64aa88029f2e20301db13
+              name: Grupo_Muscular
+              value: glutios
+              description: ""
+              disabled: false
+            - id: pair_7f0e313b9012474a821f164270e090d5
+              name: Descricao
+              value: Trabalhar musculos superiores
+              description: ""
+              disabled: false
+            - id: pair_b3322437609b4bcca08ea2ac2794b0d1
+              name: Aparelho
+              value: legpress
+              description: ""
+              disabled: false
+            - id: pair_e611f60489544b7482248fb7e50a0d00
+              name: file
+              value: ""
+              description: ""
+              disabled: false
+              type: file
+              fileName: C:\Users\AndrePc\Downloads\Download.mp4
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}exercicios/10"
+        name: Alterar com Video
+        meta:
+          id: req_794276b217444f29877e46bef50e70f8
+          created: 1754564207520
+          modified: 1754564283982
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189106.25
+        method: PUT
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: nome
+              value: Teste
+              id: pair_79224960a98840f29586012e44ef5374
+              type: text
+              multiline: false
+              disabled: false
+            - id: pair_109767adbec746b0a4613788a3c84491
+              name: Categoria
+              value: Pernas
+              description: ""
+              disabled: false
+            - id: pair_52320aa0ceb64aa88029f2e20301db13
+              name: Grupo_Muscular
+              value: Pernas Inferior
+              description: ""
+              disabled: false
+            - id: pair_7f0e313b9012474a821f164270e090d5
+              name: Descricao
+              value: Trabalhar musculos Inferiores
+              description: ""
+              disabled: false
+            - id: pair_b3322437609b4bcca08ea2ac2794b0d1
+              name: Aparelho
+              value: Flexoras
+              description: ""
+              disabled: false
+            - id: pair_e611f60489544b7482248fb7e50a0d00
+              name: file
+              value: ""
+              description: ""
+              disabled: false
+              type: file
+              fileName: C:\Users\AndrePc\Downloads\Download (1).mp4
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Treino
+    meta:
+      id: fld_a675b061d5e345bda0da111d3ea6cf69
+      created: 1753198961543
+      modified: 1753669613524
+      sortKey: -1743452182523
+      description: ""
+    children:
+      - url: "{{ _.base_url }}treinos"
+        name: Obter
+        meta:
+          id: req_2c3860f035d8424c98fb3407e897fbf2
+          created: 1753198961545
+          modified: 1753198979070
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos/1"
+        name: Delete
+        meta:
+          id: req_75a4d13060494aa7ab3a5c58ed198213
+          created: 1753198961548
+          modified: 1753199220435
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos/1"
+        name: Alterar
+        meta:
+          id: req_2500418cba9c48128bd3ee5dcb734523
+          created: 1753198961550
+          modified: 1753199210874
+          isPrivate: false
+          description: ""
+          sortKey: -1752967050343
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |2-
+              {
+                "nome": "Te Tríces"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos"
+        name: Criar
+        meta:
+          id: req_baffd17c10db43afb77dbcb32473eeb9
+          created: 1762543681270
+          modified: 1762550998961
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |2-
+              {
+                "nome": "Treinador 1 Treino Para Andre Ailton"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: TreinoDia
+    meta:
+      id: fld_a1e8fe9e028440ab8568935ac45a9601
+      created: 1753199779246
+      modified: 1753199779246
+      sortKey: -1743452182473
+      description: ""
+    children:
+      - url: "{{ _.base_url }}treinos-dias"
+        name: Obter
+        meta:
+          id: req_8b63a86d7baa42e996fbdf2cf8daf52b
+          created: 1753199779247
+          modified: 1753199817267
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos-dias"
+        name: Criar
+        meta:
+          id: req_7aac0ed852fa43c0810c8cde62de8b49
+          created: 1753199779248
+          modified: 1762229055157
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189125
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "id_Treino": 1,
+                "Dia_da_Semana": "Segunda-feira",
+                "id_Exercicio": 1,
+                "Series": 4,
+                "Repeticoes": 12,
+                "Descanso": 60,
+                "Observacoes": "Executar com carga moderada"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos-dias"
+        name: Delete
+        meta:
+          id: req_63676b8919df4c93bda1923b7153c501
+          created: 1753199779251
+          modified: 1753199823840
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}treinos-dias"
+        name: Alterar
+        meta:
+          id: req_60cf34e9d49448fa8dfd38833e70de66
+          created: 1753199779252
+          modified: 1753199812981
+          isPrivate: false
+          description: ""
+          sortKey: -1752967050343
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |2-
+              {
+                "nome": "Te Tríces"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuarios Treinos
+    meta:
+      id: fld_b966241bd5134783b29278461409b923
+      created: 1753669833300
+      modified: 1753669833300
+      sortKey: -1743452182423
+      description: ""
+    children:
+      - url: "{{ _.base_url }}usuario-treino"
+        name: Obter
+        meta:
+          id: req_735fdabf8d004018854870aa9930a8d3
+          created: 1753669833301
+          modified: 1753669858007
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuario-treino"
+        name: Criar
+        meta:
+          id: req_1468ae52661c4dc5bfa2941d5c1601a9
+          created: 1753669833303
+          modified: 1762659140691
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189125
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id_Usuario": 2,
+            	"id_Treino": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuario-treino"
+        name: Delete
+        meta:
+          id: req_04f7178e2f4e420dbda50a6b30fec139
+          created: 1753669833304
+          modified: 1753669864722
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}usuario-treino"
+        name: Alterar
+        meta:
+          id: req_430eff80b8ff4a85bb31d154347dd8a5
+          created: 1753669833305
+          modified: 1753669854551
+          isPrivate: false
+          description: ""
+          sortKey: -1752967050343
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |2-
+              {
+                "nome": "Te Tríces"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Files
+    meta:
+      id: fld_700f1c0ff85446458c761ed73249041f
+      created: 1754352336465
+      modified: 1754352336464
+      sortKey: -1743452182648
+      description: ""
+    children:
+      - url: "{{ _.base_url }}files"
+        name: Obter
+        meta:
+          id: req_1e8e7734d867425490aecfe50c4e5acd
+          created: 1754352336466
+          modified: 1754352563819
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}files"
+        name: Criar
+        meta:
+          id: req_11318a2daf5442a4ad81c5bc0979ff53
+          created: 1754352336468
+          modified: 1754436816468
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189125
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              id: pair_046b672618c94d52a073a24e06d6b4f9
+              type: file
+              fileName: C:\Users\AndrePc\Downloads\Download.mp4
+            - id: pair_452d5bb74b2b4bf1bab10dbc190a5366
+              name: Category
+              value: Peito
+              description: ""
+              disabled: false
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}files/7"
+        name: Delete
+        meta:
+          id: req_cf9136e5da95489183cb60826b506e57
+          created: 1754352336469
+          modified: 1754563039324
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}files"
+        name: Token
+        meta:
+          id: req_58a0be807b634c8f833f0233478515d8
+          created: 1754352336470
+          modified: 1754352570980
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189025
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Usuario 1",
+              "email": "Usuario1@gmail.com",
+              "password": "senhaSegura123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}files"
+        name: Criar2
+        meta:
+          id: req_ee1ad360fd894f08b9ca39213fc0c12f
+          created: 1754355457180
+          modified: 1754356093303
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "originalname": "foto_treino.jpg",
+              "filename": "treino_123456.jpg",
+              "category": "peito"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Dietas
+    meta:
+      id: fld_63e3830aeb3f4c319eddf82cbdb55f68
+      created: 1762543681266
+      modified: 1762543681266
+      sortKey: -1743452182498
+      description: ""
+    children:
+      - url: "{{ _.base_url }}dietas"
+        name: Criar
+        meta:
+          id: req_3e52c3ea43ec4befa5c277ae8a75c357
+          created: 1753198961546
+          modified: 1762659147413
+          isPrivate: false
+          description: ""
+          sortKey: -1748209619759
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              id: pair_25ea185fbffd4221ad90218b79aa0c07
+              type: file
+              fileName: C:\Users\AndrePc\Downloads\DietaAndre.pdf
+            - id: pair_07d76657b04741e880741ffbb0b5657a
+              name: descricao
+              value: Dieta Para Andre AIlton
+              description: ""
+              disabled: false
+            - id: pair_b0395ec4f081485aa819e53f07bcc1da
+              name: id_usuario
+              value: "2"
+              description: ""
+              disabled: false
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}dietas"
+        name: Obter
+        meta:
+          id: req_b936b5242a044b3581f8afe2d2d674d4
+          created: 1762543681268
+          modified: 1762567073163
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}dietas/16"
+        name: Delete
+        meta:
+          id: req_53d4cee66c2c4dae8d9850f4b329719d
+          created: 1762543681271
+          modified: 1762565904032
+          isPrivate: false
+          description: ""
+          sortKey: -1743452189075
+        method: DELETE
+        body:
+          mimeType: application/json
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}dietas/19"
+        name: Alterar
+        meta:
+          id: req_57b4e1eaca0a4e569589fff219255c89
+          created: 1762543681273
+          modified: 1762566266494
+          isPrivate: false
+          description: ""
+          sortKey: -1752967050343
+        method: PUT
+        body:
+          mimeType: multipart/form-data
+          params:
+            - id: pair_6324855a386942e3860a8c059c49c9a1
+              name: file
+              value: ""
+              description: ""
+              disabled: false
+              type: file
+              fileName: C:\Users\AndrePc\Downloads\Cardápio-–-sugestão-semanal-e-receitas.pdf
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.1
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a599cbe5006aaa7bab54bd41dccf3177c379e5f0
+    created: 1754083971423
+    modified: 1754083971423
+environments:
+  name: Base Environment
+  meta:
+    id: env_a599cbe5006aaa7bab54bd41dccf3177c379e5f0
+    created: 1743452127536
+    modified: 1762655794063
+    isPrivate: false
+  data:
+    base_url: https://fitnessapi.andreailtondev.tech/
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJUcmVpbmFkb3IyQGdtYWlsLmNvbSIsInRpcG8iOiJ0cmVpbmFkb3IiLCJpYXQiOjE3NjI2NTU3ODUsImV4cCI6MTc2NTI0Nzc4NX0.o1d4U6H26mvJkjjN7NihUUqjatiABjM86VhNpNAGb9o
+    api_key: rbfP36xTKLvHmq5mD3dF9qgLG1adW7Eh
