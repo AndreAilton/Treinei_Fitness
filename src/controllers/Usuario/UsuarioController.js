@@ -4,7 +4,7 @@ import TreinoDia from "../../models/TreinoDia.js";
 import Treino from "../../models/Treino.js";
 import Exercicio from "../../models/Exercicio.js";
 import Files from "../../models/Files.js";
-import DietaFile from "../../models/Dietas_Files.js"; // Adicione este import
+import DietaFile from "../../models/Dietas_Files.js";
 
 class UserController {
   async store(req, res) {
@@ -61,153 +61,160 @@ class UserController {
       const API_HOST = process.env.API_HOST;
       const host = `${API_HOST}`;
 
-      const { telefone } = req.params;
 
-      // define include reutilizável para treinos
-      const includeTreinos = [
-        {
-          model: UsuariosTreino,
-          as: "usuarios_treino",
-          attributes: ["id"],
-          include: [
-            {
-              model: Treino,
-              as: "treino",
-              attributes: ["id", "nome"],
-              include: [
-                {
-                  model: TreinoDia,
-                  as: "treinos_dia",
-                  attributes: [
-                    "id",
-                    "Dia_da_Semana",
-                    "Series",
-                    "Repeticoes",
-                    "Descanso",
-                  ],
-                  include: [
-                    {
-                      model: Exercicio,
-                      as: "exercicio",
-                      attributes: ["id", "nome", "descricao"],
-                      include: [
-                        {
-                          model: Files,
-                          as: "videos",
-                          attributes: [
-                            "id",
-                            "originalname",
-                            "filename",
-                            "category",
-                            "id_exercicio",
-                            "id_treinador",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ];
-
-      // define include para dietas
-      const includeDietas = [
-        {
-          model: DietaFile,
-          as: "dietas",
-          attributes: [
-            "id",
-            "originalname",
-            "filename",
-            "descricao",
-            "mime_type",
-            "id_treinador",
-            "status",
-          ],
-          where: { status: true }, // Apenas dietas ativas
-        },
-      ];
-
-      // Busca por telefone ou userId com includes
+      // Primeiro, tenta encontrar o usuário sem includes para debug
       let user;
-      if (telefone) {
+      if (req.params.telefone) {
         user = await Usuarios.findOne({
-          where: { telefone },
-          attributes: ["id", "telefone", "nome", "email", "status"],
-          include: [...includeTreinos, ...includeDietas],
-        });
-      } else {
-        if (!req.userId) {
-          return res
-            .status(403)
-            .json({ success: false, message: "Acesso restrito." });
-        }
-
-        user = await Usuarios.findByPk(req.userId, {
-          attributes: ["id", "telefone", "nome", "email", "status"],
-          include: [...includeTreinos, ...includeDietas],
-        });
-      }
-
-      if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Usuário não encontrado" });
-      }
-      if (user.status === false) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Usuário desativado" });
-      }
-
-      // Adiciona URL dinâmica em todos os vídeos (mantém código existente)
-      const usuariosTreinoComVideo = (user.usuarios_treino || []).map((ut) => {
-        const treino = ut.treino || {};
-        const treinosDiaComVideo = (treino.treinos_dia || []).map((td) => {
-          const exercicio = td.exercicio || {};
-          const videosComUrl = (exercicio.videos || []).map((video) => ({
-            ...video.toJSON(),
-            url: `${host}/Videos/${video.id_treinador}/${
-              video.category || "nocategory"
-            }/${video.filename}`,
-          }));
-
-          return {
-            ...td.toJSON(),
-            exercicio: {
-              ...exercicio.toJSON(),
-              videos: videosComUrl,
-            },
-          };
-        });
-
-        return {
-          ...ut.toJSON(),
-          treino: {
-            ...treino.toJSON(),
-            treinos_dia: treinosDiaComVideo,
+          where: {
+            telefone: req.params.telefone,
+            status: true,
           },
-        };
+          attributes: ["id", "telefone", "nome", "email", "status"],
+        });
+
+
+      } else if (req.userId) {
+        user = await Usuarios.findOne({
+          where: {
+            id: req.userId,
+            status: true,
+          },
+          attributes: ["id", "telefone", "nome", "email", "status"],
+        });
+
+
+      } else {
+        return res.status(403).json({
+          success: false,
+          message: "É necessário fornecer um telefone ou estar autenticado",
+        });
+      }
+
+      // Se não encontrou o usuário, retorna erro
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Usuário não encontrado",
+        });
+      }
+
+      // Agora que encontramos o usuário, buscamos os relacionamentos
+      const userCompleto = await Usuarios.findOne({
+        where: { id: user.id },
+        attributes: ["id", "telefone", "nome", "email", "status"],
+        include: [
+          {
+            model: UsuariosTreino,
+            as: "usuarios_treino",
+            required: false,
+            include: [
+              {
+                model: Treino,
+                as: "treino",
+                attributes: ["id", "nome"],
+                include: [
+                  {
+                    model: TreinoDia,
+                    as: "treinos_dia",
+                    attributes: [
+                      "id",
+                      "Dia_da_Semana",
+                      "Series",
+                      "Repeticoes",
+                      "Descanso",
+                    ],
+                    include: [
+                      {
+                        model: Exercicio,
+                        as: "exercicio",
+                        attributes: ["id", "nome", "descricao"],
+                        include: [
+                          {
+                            model: Files,
+                            as: "videos",
+                            attributes: [
+                              "id",
+                              "originalname",
+                              "filename",
+                              "category",
+                              "id_exercicio",
+                              "id_treinador",
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: DietaFile,
+            as: "dietas",
+            required: false,
+            where: { status: true },
+            attributes: [
+              "id",
+              "originalname",
+              "filename",
+              "descricao",
+              "mime_type",
+              "id_treinador",
+              "status",
+            ],
+          },
+        ],
       });
 
-      // Adiciona URL dinâmica para dietas
-      const dietasComUrl = (user.dietas || []).map((dieta) => ({
-        ...dieta.toJSON(),
-        url: `${host}/Dietas/${dieta.id_treinador}/${user.id}/${dieta.filename}`,
+      if (!userCompleto) {
+        return res.status(404).json({
+          success: false,
+          message: "Erro ao carregar dados completos do usuário",
+        });
+      }
+
+      // Converte para JSON uma única vez
+      const userJson = userCompleto.toJSON();
+
+      // Processa URLs dos vídeos
+      const usuariosTreinoComVideo = (userJson.usuarios_treino || []).map(
+        (ut) => {
+          if (ut.treino && ut.treino.treinos_dia) {
+            ut.treino.treinos_dia = ut.treino.treinos_dia.map((td) => {
+              if (td.exercicio && td.exercicio.videos) {
+                td.exercicio.videos = td.exercicio.videos.map((video) => ({
+                  ...video,
+                  url: `${host}/Videos/${video.id_treinador}/${
+                    video.category || "nocategory"
+                  }/${video.filename}`,
+                }));
+              }
+              return td;
+            });
+          }
+          return ut;
+        }
+      );
+
+      // Processa URLs das dietas
+      const dietasComUrl = (userJson.dietas || []).map((dieta) => ({
+        ...dieta,
+        url: `${host}/Dietas/${dieta.id_treinador}/${userJson.id}/${dieta.filename}`,
       }));
 
+      // Retorna o resultado processado
       return res.status(200).json({
         success: true,
         user: {
-          ...user.toJSON(),
+          ...userJson,
           usuarios_treino: usuariosTreinoComVideo,
           dietas: dietasComUrl,
         },
       });
     } catch (e) {
+
       return res.status(400).json({
         success: false,
         message: "Erro ao buscar usuário",
