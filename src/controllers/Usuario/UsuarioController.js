@@ -5,6 +5,7 @@ import Treino from "../../models/Treino.js";
 import Exercicio from "../../models/Exercicio.js";
 import Files from "../../models/Files.js";
 import DietaFile from "../../models/Dietas_Files.js";
+import Treinador from "../../models/Treinador.js";
 
 class UserController {
   async store(req, res) {
@@ -57,10 +58,16 @@ class UserController {
   }
 
   async show(req, res) {
+    // Verifica se é treinador e nega acesso
+    if (req.tipo === "treinador") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Acesso restrito a usuários." });
+    }
+
     try {
       const API_HOST = process.env.API_HOST;
       const host = `${API_HOST}`;
-
 
       // Primeiro, tenta encontrar o usuário sem includes para debug
       let user;
@@ -72,8 +79,6 @@ class UserController {
           },
           attributes: ["id", "telefone", "nome", "email", "status"],
         });
-
-
       } else if (req.userId) {
         user = await Usuarios.findOne({
           where: {
@@ -82,8 +87,6 @@ class UserController {
           },
           attributes: ["id", "telefone", "nome", "email", "status"],
         });
-
-
       } else {
         return res.status(403).json({
           success: false,
@@ -112,7 +115,7 @@ class UserController {
               {
                 model: Treino,
                 as: "treino",
-                attributes: ["id", "nome"],
+                attributes: ["id", "nome", "id_treinador"],
                 include: [
                   {
                     model: TreinoDia,
@@ -145,6 +148,11 @@ class UserController {
                         ],
                       },
                     ],
+                  },
+                  {
+                    model: Treinador,
+                    foreignKey: "id_treinador",
+                    attributes: ["id", "nome"],
                   },
                 ],
               },
@@ -214,7 +222,6 @@ class UserController {
         },
       });
     } catch (e) {
-
       return res.status(400).json({
         success: false,
         message: "Erro ao buscar usuário",

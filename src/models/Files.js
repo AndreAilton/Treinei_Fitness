@@ -52,7 +52,7 @@ export default class Files extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Admins, { foreignKey: 'id_treinador' });
+    this.belongsTo(models.Treinador, { foreignKey: 'id_treinador' });
     this.belongsTo(models.Exercicio, { foreignKey: 'id_exercicio', as: 'exercicio' });
   }
 }

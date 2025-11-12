@@ -38,7 +38,7 @@ export default class Exercicio extends Model {
   }
   static associate(models) {
     // Associa a tarefa com o usuário
-    this.belongsTo(models.Admins, { foreignKey: 'id_treinador' });
+    this.belongsTo(models.Treinador, { foreignKey: 'id_treinador' });
     this.hasMany(models.Files, { foreignKey: 'id_exercicio', as: 'videos' });
   }
 }

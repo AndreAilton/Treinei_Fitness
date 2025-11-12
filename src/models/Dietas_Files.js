@@ -69,7 +69,7 @@ export default class Dietas_Files extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Admins, { foreignKey: "id_treinador" });
+    this.belongsTo(models.Treinador, { foreignKey: "id_treinador" });
     this.belongsTo(models.Usuarios, {
       foreignKey: "id_usuario",
       as: "usuario",

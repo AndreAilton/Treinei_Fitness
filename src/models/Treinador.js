@@ -2,7 +2,7 @@
 import { Model, DataTypes } from 'sequelize';
 import bcryptjs from 'bcryptjs';
 
-export default class Admins extends Model {
+export default class Treinador extends Model {
 
     static init(sequelize) {
         super.init({

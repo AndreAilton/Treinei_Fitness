@@ -37,7 +37,7 @@ export default class UsuariosTreino extends Model {
     return this;
   }
   static associate(models) {
-    this.belongsTo(models.Admins, { foreignKey: "id_Treinador", as: "treinador" });
+    this.belongsTo(models.Treinador, { foreignKey: "id_Treinador", as: "treinador" });
     this.belongsTo(models.Treino, { foreignKey: "id_Treino", as: "treino" });
     this.belongsTo(models.Usuarios, { foreignKey: "id_Usuario", as: "usuario" });
   }
