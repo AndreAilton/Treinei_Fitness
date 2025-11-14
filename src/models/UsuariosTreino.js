@@ -7,12 +7,11 @@ export default class UsuariosTreino extends Model {
         id_Usuario: {
           type: DataTypes.INTEGER,
           allowNull: false,
-
           field: "id_Usuario",
         },
         id_Treino: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           field: "id_Treino",
         },
         id_Treinador: {
@@ -23,7 +22,7 @@ export default class UsuariosTreino extends Model {
         ativo: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
-          defaultValue: true,
+          defaultValue: false,
           field: "ativo",
         },
       },
