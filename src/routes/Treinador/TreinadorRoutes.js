@@ -6,6 +6,7 @@ import TreinadorController from "../../controllers/Treinador/TreinadorController
 const router = express.Router();
 
 router.post("/", TreinadorController.store);
+router.get("/all", TreinadorController.index);
 router.get("/", LoginRequire, TreinadorController.show);
 router.get("/:id", LoginRequire, TreinadorController.show);
 router.put("/", LoginRequire, TreinadorController.update);

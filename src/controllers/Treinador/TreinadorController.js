@@ -32,7 +32,6 @@ class TreinadorController {
     try {
       const treinadores = await Treinador.findAll({
         attributes: ["id", "nome", "email", "status"],
-        where: { id_Treinador: req.treinadorId },
       });
       return res.status(200).json({ success: true, treinadores });
     } catch (e) {
