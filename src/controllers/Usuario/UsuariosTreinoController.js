@@ -5,7 +5,7 @@ class UsuariosTreinoController {
     try {
       const novoUsuariosTreino = await UsuariosTreino.create({
         ...req.body,
-        id_Treinador: req.treinadorId,
+        id_Usuario: req.usuarioId,
       });
 
       return res

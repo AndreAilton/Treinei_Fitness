@@ -23,7 +23,7 @@ module.exports = {
       },
       id_Treino: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "Treinos", // Nome da tabela referenciada
           key: "id", // Chave primária da tabela referenciada
