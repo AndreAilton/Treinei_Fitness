@@ -7,6 +7,7 @@ import ApiKeyRequire from "../../middlewares/ApiKeyRequire.js";
 const router = express.Router();
 
 router.post("/", UserController.store);
+router.get("/all", LoginRequire, UserController.index);
 router.get("/", LoginRequire, UserController.show);
 router.get("/:telefone", ApiKeyRequire, UserController.show);
 router.put("/", LoginRequire, UserController.update);

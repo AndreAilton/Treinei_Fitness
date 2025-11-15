@@ -1,4 +1,5 @@
 import UsuariosTreino from "../../models/UsuariosTreino.js";
+import Usuarios from "../../models/Usuario.js";
 
 class UsuariosTreinoController {
   async store(req, res) {
@@ -38,6 +39,12 @@ class UsuariosTreinoController {
     try {
       const usuariosTreinos = await UsuariosTreino.findAll({
         where: { id_Treinador: req.treinadorId },
+        include: [
+          {
+            model: Usuarios,
+            as: "usuario",
+          },
+        ],
       });
       return res.status(200).json({ success: true, usuariosTreinos });
     } catch (e) {
