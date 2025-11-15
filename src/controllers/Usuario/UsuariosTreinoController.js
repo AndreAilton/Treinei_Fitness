@@ -6,13 +6,21 @@ class UsuariosTreinoController {
       const novoUsuariosTreino = await UsuariosTreino.create({
         ...req.body,
         id_Usuario: req.userId,
+        treino_ativo: false,
       });
 
       return res
         .status(200)
         .json({ success: true, usuariosTreino: novoUsuariosTreino });
     } catch (e) {
-      console.log(e);
+
+      if (e.errors && e.errors[0].type === "unique violation") {
+        return res.status(400).json({
+          success: false,
+          message: "Você já possui um treinador ativo.",
+        });
+      }
+
       return res.status(400).json({
         success: false,
         message: "Erro ao criar relação usuário-treino",

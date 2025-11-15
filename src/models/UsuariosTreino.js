@@ -20,11 +20,11 @@ export default class UsuariosTreino extends Model {
           allowNull: false,
           field: "id_Treinador",
         },
-        ativo: {
+        treino_ativo: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
           defaultValue: false,
-          field: "ativo",
+          field: "treino_ativo",
         },
       },
       {
