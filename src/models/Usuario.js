@@ -91,7 +91,7 @@ export default class Usuarios extends Model {
 
   static associate(models) {
     this.hasMany(models.UsuariosTreino, {
-      foreignKey: "id_Usuario",
+      foreignKey: "id_usuario",
       as: "usuarios_treino",
     });
     this.hasMany(models.Dietas_Files, { 

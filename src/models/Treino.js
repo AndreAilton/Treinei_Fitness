@@ -22,7 +22,7 @@ export default class Treino extends Model {
     static associate(models) {
     // Associa a tarefa com o usuário
     this.belongsTo(models.Treinador, { foreignKey: 'id_treinador' });
-    this.hasMany(models.TreinoDia, { foreignKey: 'id_Treino', as: 'treinos_dia' });
-    this.hasMany(models.UsuariosTreino, { foreignKey: 'id_Treino', as: 'usuarios_treino' });
+    this.hasMany(models.TreinoDia, { foreignKey: 'id_treino', as: 'treinos_dia' });
+    this.hasMany(models.UsuariosTreino, { foreignKey: 'id_treino', as: 'usuarios_treino' });
   }
 }
