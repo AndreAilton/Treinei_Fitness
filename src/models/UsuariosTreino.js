@@ -4,40 +4,58 @@ export default class UsuariosTreino extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_Usuario: {
+        id_usuario: {
           type: DataTypes.INTEGER,
           allowNull: false,
-          field: "id_Usuario",
         },
-        id_Treino: {
+
+        id_treinador: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+
+        id_treino: {
           type: DataTypes.INTEGER,
           allowNull: true,
-          field: "id_Treino",
         },
-        id_Treinador: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          field: "id_Treinador",
-        },
+
         ativo: {
           type: DataTypes.BOOLEAN,
-          allowNull: false,
           defaultValue: false,
-          field: "ativo",
+        },
+
+        created_at: {
+          type: DataTypes.DATE,
+        },
+
+        updated_at: {
+          type: DataTypes.DATE,
         },
       },
       {
         sequelize,
         tableName: "UsuariosTreino",
-        timestamps: true,
-        underscored: true,
+        underscored: true, // usa snake_case automaticamente
+        timestamps: false, // porque já existem created_at e updated_at no DB
       }
     );
     return this;
   }
+
   static associate(models) {
-    this.belongsTo(models.Treinador, { foreignKey: "id_Treinador", as: "treinador" });
-    this.belongsTo(models.Treino, { foreignKey: "id_Treino", as: "treino" });
-    this.belongsTo(models.Usuarios, { foreignKey: "id_Usuario", as: "usuario" });
+    this.belongsTo(models.Usuarios, {
+      foreignKey: "id_usuario",
+      as: "usuario",
+    });
+
+    this.belongsTo(models.Treinador, {
+      foreignKey: "id_treinador",
+      as: "treinador",
+    });
+
+    this.belongsTo(models.Treino, {
+      foreignKey: "id_treino",
+      as: "treino",
+    });
   }
 }

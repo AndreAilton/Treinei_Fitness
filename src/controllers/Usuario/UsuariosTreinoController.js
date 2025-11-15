@@ -1,20 +1,48 @@
 import UsuariosTreino from "../../models/UsuariosTreino.js";
 
 class UsuariosTreinoController {
-  async store(req, res) {
+   async store(req, res) {
     try {
-      const novoUsuariosTreino = await UsuariosTreino.create({
-        ...req.body,
-        id_Usuario: req.usuarioId,
+      const { id_treinador, id_treino = null } = req.body;
+
+      // verificar se usuário já tem uma relação
+      let relacao = await UsuariosTreino.findOne({
+        where: { id_usuario: req.userId },
       });
 
-      return res
-        .status(200)
-        .json({ success: true, usuariosTreino: novoUsuariosTreino });
+      // Se NÃO existe -> cria
+      if (!relacao) {
+        relacao = await UsuariosTreino.create({
+          id_usuario: req.userId,
+          id_treinador,
+          id_treino,
+          ativo: false,
+        });
+
+        return res.status(200).json({
+          success: true,
+          created: true,
+          usuariosTreino: relacao,
+        });
+      }
+
+      // Se JÁ existe -> atualiza treinador e treino
+      relacao.id_treinador = id_treinador;
+      relacao.id_treino = id_treino;
+      await relacao.save();
+
+      return res.status(200).json({
+        success: true,
+        created: false,
+        usuariosTreino: relacao,
+      });
+
     } catch (e) {
+
       return res.status(400).json({
         success: false,
-        message: "Erro ao criar relação usuário-treino",
+        message: "Erro ao vincular treinador ao usuário",
+        error: e.message,
       });
     }
   }

@@ -2,7 +2,6 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Criação da tabela de usuários
     await queryInterface.createTable("UsuariosTreino", {
       id: {
         type: Sequelize.INTEGER,
@@ -10,59 +9,63 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      id_Usuario: {
+
+      id_usuario: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true, // Garante que cada usuário só possa receber um treino por vez
+        unique: true, 
         references: {
-          model: "Usuarios", // Nome da tabela referenciada
-          key: "id", // Chave primária da tabela referenciada
+          model: "Usuarios",
+          key: "id",
         },
-        onUpdate: "CASCADE", // Atualiza em cascata
-        onDelete: "CASCADE", // Deleta em cascata
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      id_Treino: {
+
+      id_treino: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "Treinos", // Nome da tabela referenciada
-          key: "id", // Chave primária da tabela referenciada
+          model: "Treinos",
+          key: "id",
         },
-        onUpdate: "CASCADE", // Atualiza em cascata
-        onDelete: "CASCADE", // Deleta em cascata
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      id_Treinador: {
+
+      id_treinador: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Treinador", // Nome da tabela referenciada
-          key: "id", // Chave primária da tabela referenciada
+          model: "Treinador",
+          key: "id",
         },
-        onUpdate: "CASCADE", // Atualiza em cascata
-        onDelete: "CASCADE", // Deleta em cascata
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
+
       ativo: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, // Define um valor padrão
+        defaultValue: false,
       },
+
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"), // Define um valor padrão
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
 
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        onUpdate: Sequelize.literal("CURRENT_TIMESTAMP"), // Atualiza automaticamente
+        onUpdate: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    // Remoção da tabela de usuários
+  down: async (queryInterface) => {
     await queryInterface.dropTable("UsuariosTreino");
   },
 };
