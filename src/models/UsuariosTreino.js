@@ -15,7 +15,11 @@ export default class UsuariosTreino extends Model {
           allowNull: true,
           field: "id_Treino",
         },
-        
+        id_Dieta: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          field: "id_Dieta",
+        },
         id_Treinador: {
           type: DataTypes.INTEGER,
           allowNull: false,
@@ -41,5 +45,6 @@ export default class UsuariosTreino extends Model {
     this.belongsTo(models.Treinador, { foreignKey: "id_Treinador", as: "treinador" });
     this.belongsTo(models.Treino, { foreignKey: "id_Treino", as: "treino" });
     this.belongsTo(models.Usuarios, { foreignKey: "id_Usuario", as: "usuario" });
+    this.belongsTo(models.Dietas_Files, { foreignKey: "id_Dieta", as: "dieta" });
   }
 }

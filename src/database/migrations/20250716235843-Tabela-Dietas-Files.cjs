@@ -33,16 +33,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      id_usuario: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Usuarios",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

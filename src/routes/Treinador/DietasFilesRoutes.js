@@ -5,13 +5,7 @@ import DietasFilesController from "../../controllers/Treinador/DietasFilesContro
 const router = express.Router();
 
 router.post("/", LoginRequire, DietasFilesController.store);
-router.get(
-  "/",
-  LoginRequire,
-  DietasFilesController.index ||
-    DietasFilesController.list ||
-    ((req, res) => res.status(200).json({ message: "implementar list" }))
-);
+router.get("/", LoginRequire, DietasFilesController.index);
 router.get("/:id", LoginRequire, DietasFilesController.show);
 router.put("/:id", LoginRequire, DietasFilesController.update);
 router.delete("/:id", LoginRequire, DietasFilesController.delete);

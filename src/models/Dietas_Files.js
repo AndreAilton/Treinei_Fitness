@@ -39,13 +39,6 @@ export default class Dietas_Files extends Model {
             key: "id",
           },
         },
-        id_usuario: {
-          type: Sequelize.INTEGER,
-          references: {
-            model: "Usuarios",
-            key: "id",
-          },
-        },
         status: {
           type: Sequelize.BOOLEAN,
           defaultValue: true,
@@ -53,7 +46,7 @@ export default class Dietas_Files extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `${process.env.APP_URL}/Dietas/${this.id_treinador}/${this.id_usuario}/${this.filename}`;
+            return `${process.env.APP_URL}/Dietas/${this.id_treinador}/${this.filename}`;
           },
         },
       },
@@ -70,9 +63,6 @@ export default class Dietas_Files extends Model {
 
   static associate(models) {
     this.belongsTo(models.Treinador, { foreignKey: "id_treinador" });
-    this.belongsTo(models.Usuarios, {
-      foreignKey: "id_usuario",
-      as: "usuario",
-    });
+
   }
 }

@@ -7,6 +7,7 @@ import fs from "fs";
 const upload = multer(multerDietasConfig).single("file");
 
 class DietasFilesController {
+  // 📌 Criar nova dieta (NÃO REMOVE mais nenhum arquivo anterior)
   store(req, res) {
     return upload(req, res, async (error) => {
       if (error) {
@@ -15,170 +16,92 @@ class DietasFilesController {
 
       try {
         const { originalname, filename, mimetype } = req.file;
-        const { id_usuario: id_usuario_raw, descricao } = req.body;
+        const { descricao } = req.body;
         const id_treinador = req.treinadorId;
-        const id_usuario =
-          id_usuario_raw !== undefined && id_usuario_raw !== null
-            ? Number(id_usuario_raw)
-            : null;
 
+        // Pastas
         const uploadsDir =
           process.env.UPLOADS_PATH ||
           path.resolve(__dirname, "..", "..", "uploads");
         const dietasDir = path.resolve(uploadsDir, "dietas");
+        const treinadorDir = path.resolve(dietasDir, `${id_treinador}`);
 
+        // Cria pastas
         if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
         if (!fs.existsSync(dietasDir)) fs.mkdirSync(dietasDir);
+        if (!fs.existsSync(treinadorDir)) fs.mkdirSync(treinadorDir);
 
-        // Antes de criar uma nova dieta para o mesmo usuário, apaga a anterior (se existir)
-        if (id_usuario) {
-          try {
-            const anteriores = await DietaFile.findAll({
-              where: { id_treinador, id_usuario, status: true },
-            });
-            for (const ant of anteriores) {
-              try {
-                const oldPath = path.resolve(
-                  dietasDir,
-                  `${ant.id_treinador}`,
-                  `${ant.id_usuario}`,
-                  ant.filename
-                );
-                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-              } catch (fileErr) {
-                console.log(
-                  "Erro ao remover arquivo antigo de dieta:",
-                  fileErr.message || fileErr
-                );
-              }
-              try {
-                await ant.destroy();
-              } catch (dbErr) {
-                console.log(
-                  "Erro ao remover registro antigo de dieta:",
-                  dbErr.message || dbErr
-                );
-              }
-            }
-          } catch (qErr) {
-            console.log(
-              "Erro ao buscar dietas anteriores:",
-              qErr.message || qErr
-            );
-          }
-        }
+        // 🔥 NÃO REMOVE MAIS ARQUIVOS ANTIGOS
 
+        // Criar registro no banco
         const created = await DietaFile.create({
           originalname,
           filename,
           descricao,
           mime_type: mimetype,
           id_treinador,
-          id_usuario,
+          status: true,
         });
 
-        // Move arquivo do diretório temporário (padrão do multerDietasConfig) para /uploads/dietas/<id_treinador>/<id_usuario>/
+        // Mover arquivo temp → destino final
         try {
-          const tempPath = path.resolve(
-            uploadsDir,
-            "dietas",
-            `${id_treinador}`,
-            "nocategory",
-            filename
-          );
-          const destDir = path.resolve(
-            dietasDir,
-            `${id_treinador}`,
-            `${id_usuario}`
-          );
-          if (!fs.existsSync(destDir))
-            fs.mkdirSync(destDir, { recursive: true });
-          const destPath = path.resolve(destDir, filename);
-          if (fs.existsSync(tempPath)) {
-            fs.renameSync(tempPath, destPath);
+          const tempPath = req.file.path;
+          const destPath = path.resolve(treinadorDir, filename);
 
-            // Tenta remover a pasta nocategory após mover o arquivo
-            try {
-              const nocategoryDir = path.resolve(
-                dietasDir,
-                `${id_treinador}`,
-                "nocategory"
-              );
-              // Verifica se a pasta existe e está vazia antes de tentar remover
-              if (fs.existsSync(nocategoryDir)) {
-                const files = fs.readdirSync(nocategoryDir);
-                if (files.length === 0) {
-                  fs.rmdirSync(nocategoryDir);
-                }
-              }
-            } catch (rmErr) {
-              console.log(
-                "Aviso: Não foi possível remover pasta nocategory:",
-                rmErr.message || rmErr
-              );
-            }
-          }
-        } catch (moveErr) {
-          // Não interrompe a criação do registro — apenas loga
-          console.log(
-            "Erro ao mover arquivo para pasta dietas:",
-            moveErr.message || moveErr
-          );
+          if (fs.existsSync(tempPath)) fs.renameSync(tempPath, destPath);
+        } catch (err) {
+          console.log("Erro ao mover arquivo:", err);
         }
 
-        const jsonCreated = created.toJSON();
-        // Garantir que id_usuario seja number na resposta
-        if (
-          jsonCreated.id_usuario !== undefined &&
-          jsonCreated.id_usuario !== null
-        ) {
-          jsonCreated.id_usuario = Number(jsonCreated.id_usuario);
-        }
-        return res.status(201).json(jsonCreated);
+        return res.status(201).json(created.toJSON());
       } catch (e) {
         return res.status(400).json({ errors: [e.message] });
       }
     });
   }
 
+  // 📌 Mostrar um arquivo
   async show(req, res) {
     try {
       const { id } = req.params;
       const file = await DietaFile.findByPk(id);
-      if (!file)
-        return res.status(404).json({ errors: ["Arquivo não encontrado"] });
 
-      if (req.treinadorId !== file.id_treinador) {
+      if (!file) return res.status(404).json({ errors: ["Arquivo não encontrado"] });
+      if (req.treinadorId !== file.id_treinador)
         return res.status(403).json({ errors: ["Acesso negado"] });
-      }
 
-      const json = file.toJSON();
-      if (json.id_usuario !== undefined && json.id_usuario !== null)
-        json.id_usuario = Number(json.id_usuario);
-      return res.status(200).json(json);
+      return res.status(200).json(file.toJSON());
     } catch (e) {
       return res.status(400).json({ errors: [e.message] });
     }
   }
 
+  // 📌 Listar dietas do treinador
   async index(req, res) {
     try {
       const files = await DietaFile.findAll({
         where: { id_treinador: req.treinadorId },
+        attributes: [
+          "id",
+          "originalname",
+          "filename",
+          "descricao",
+          "mime_type",
+          "id_treinador",
+          "status",
+          "created_at",
+          "updated_at",
+        ],
       });
-      const mapped = files.map((f) => {
-        const j = f.toJSON();
-        if (j.id_usuario !== undefined && j.id_usuario !== null)
-          j.id_usuario = Number(j.id_usuario);
-        return j;
-      });
-      return res.status(200).json({ success: true, files: mapped });
+
+      return res.status(200).json({ success: true, files });
     } catch (e) {
       return res.status(400).json({ errors: [e.message] });
     }
   }
 
-  async update(req, res) {
+  // 📌 Atualizar dieta (arquivo é substituído, MAS a antiga não é deletada)
+  update(req, res) {
     return upload(req, res, async (error) => {
       if (error) {
         return res.status(400).json({ errors: [error.code] });
@@ -187,174 +110,92 @@ class DietasFilesController {
       try {
         const { id } = req.params;
         const file = await DietaFile.findByPk(id);
-        if (!file) {
+
+        if (!file)
           return res.status(404).json({ errors: ["Arquivo não encontrado"] });
-        }
 
         const uploadsDir =
           process.env.UPLOADS_PATH ||
           path.resolve(__dirname, "..", "..", "uploads");
         const dietasDir = path.resolve(uploadsDir, "dietas");
+        const treinadorDir = path.resolve(dietasDir, `${file.id_treinador}`);
 
-        // Se recebeu novo arquivo
+        // Atualização com novo arquivo
         if (req.file) {
           const { originalname, filename, mimetype } = req.file;
-          const oldPath = path.resolve(
-            dietasDir,
-            `${file.id_treinador}`,
-            `${file.id_usuario}`,
-            file.filename
-          );
 
-          // Remove arquivo antigo
-          if (fs.existsSync(oldPath)) {
-            fs.unlinkSync(oldPath);
+          // NÃO REMOVE mais o antigo — só sobrescreve dados
+          const tempPath = req.file.path;
+          const destPath = path.resolve(treinadorDir, filename);
+
+          if (!fs.existsSync(treinadorDir)) {
+            fs.mkdirSync(treinadorDir, { recursive: true });
           }
 
-          // Move novo arquivo para pasta correta
-          const tempPath = path.resolve(
-            dietasDir,
-            `${file.id_treinador}`,
-            "nocategory",
-            filename
-          );
+          if (fs.existsSync(tempPath)) fs.renameSync(tempPath, destPath);
 
-          const newIdUsuario = req.body.id_usuario
-            ? Number(req.body.id_usuario)
-            : file.id_usuario;
-          const destDir = path.resolve(
-            dietasDir,
-            `${file.id_treinador}`,
-            `${newIdUsuario}`
-          );
-
-          if (!fs.existsSync(destDir)) {
-            fs.mkdirSync(destDir, { recursive: true });
-          }
-
-          const destPath = path.resolve(destDir, filename);
-          if (fs.existsSync(tempPath)) {
-            fs.renameSync(tempPath, destPath);
-
-            // Tenta remover pasta nocategory se vazia
-            try {
-              const nocategoryDir = path.resolve(
-                dietasDir,
-                `${file.id_treinador}`,
-                "nocategory"
-              );
-              if (fs.existsSync(nocategoryDir)) {
-                const files = fs.readdirSync(nocategoryDir);
-                if (files.length === 0) {
-                  fs.rmdirSync(nocategoryDir);
-                }
-              }
-            } catch (rmErr) {
-              console.log(
-                "Aviso: Não foi possível remover pasta nocategory:",
-                rmErr.message || rmErr
-              );
-            }
-          }
-
-          // Atualiza registro com dados do novo arquivo
           await file.update({
             originalname,
             filename,
             mime_type: mimetype,
             ...(req.body.descricao && { descricao: req.body.descricao }),
-            ...(req.body.id_usuario && {
-              id_usuario: Number(req.body.id_usuario),
-            }),
           });
         } else {
-          // Se não recebeu arquivo, apenas atualiza metadados
-          const newIdUsuario = req.body.id_usuario
-            ? Number(req.body.id_usuario)
-            : undefined;
-
-          if (newIdUsuario && newIdUsuario !== file.id_usuario) {
-            // Move arquivo para nova pasta de usuário
-            const oldPath = path.resolve(
-              dietasDir,
-              `${file.id_treinador}`,
-              `${file.id_usuario}`,
-              file.filename
-            );
-            const newDir = path.resolve(
-              dietasDir,
-              `${file.id_treinador}`,
-              `${newIdUsuario}`
-            );
-            if (!fs.existsSync(newDir)) {
-              fs.mkdirSync(newDir, { recursive: true });
-            }
-            const newPath = path.resolve(newDir, file.filename);
-            if (fs.existsSync(oldPath)) {
-              fs.renameSync(oldPath, newPath);
-            }
-          }
-
           await file.update({
             ...(req.body.descricao && { descricao: req.body.descricao }),
-            ...(newIdUsuario && { id_usuario: newIdUsuario }),
           });
         }
 
-        const updatedFile = await DietaFile.findByPk(id);
-        const json = updatedFile.toJSON();
-        if (json.id_usuario !== undefined && json.id_usuario !== null) {
-          json.id_usuario = Number(json.id_usuario);
-        }
-
-        return res.status(200).json({ success: true, file: json });
+        return res.status(200).json({
+          success: true,
+          file: file.toJSON(),
+        });
       } catch (e) {
         return res.status(400).json({ errors: [e.message] });
       }
     });
   }
 
+  // 📌 "Excluir" dieta → move para backup e status = false
   async delete(req, res) {
-    try {
-      const { id } = req.params;
-      const file = await DietaFile.findByPk(id);
-      if (!file)
-        return res.status(404).json({ errors: ["Arquivo não encontrado"] });
+  try {
+    const { id } = req.params;
+    const file = await DietaFile.findByPk(id);
 
-      const uploadsDir =
-        process.env.UPLOADS_PATH ||
-        path.resolve(__dirname, "..", "..", "uploads");
-      const dietasDir = path.resolve(uploadsDir, "dietas");
-      const userDir = path.resolve(
-        dietasDir,
-        `${file.id_treinador}`,
-        `${file.id_usuario}`
-      );
-      const filePath = path.resolve(userDir, file.filename);
-      const backupDir = path.resolve(
-        dietasDir,
-        `${file.id_treinador}`,
-        `${file.id_usuario}`,
-        "Backup"
-      );
-
-      if (!fs.existsSync(backupDir))
-        fs.mkdirSync(backupDir, { recursive: true });
-      if (fs.existsSync(filePath))
-        fs.renameSync(filePath, path.resolve(backupDir, file.filename));
-
-      file.status = false;
-      file.descricao = "Backup";
-      await file.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Arquivo movido para Backup e marcado como inativo",
+    if (!file) {
+      return res.status(404).json({
+        success: false,
+        errors: ["Arquivo não encontrado"],
       });
-    } catch (e) {
-      return res.status(400).json({ errors: [e.message] });
     }
+
+    // Caminhos
+    const uploadsDir = process.env.UPLOADS_PATH || path.resolve("uploads");
+    const dietasDir = path.resolve(uploadsDir, "dietas");
+    const treinadorDir = path.resolve(dietasDir, `${file.id_treinador}`);
+    const filePath = path.resolve(treinadorDir, file.filename);
+
+    // Remove arquivo físico
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    // Remove definitivamente do banco
+    await file.destroy();
+
+    return res.status(200).json({
+      success: true,
+      message: "Arquivo excluído do sistema e removido do banco de dados",
+    });
+
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      errors: [e.message],
+    });
   }
+}
+
 }
 
 export default new DietasFilesController();

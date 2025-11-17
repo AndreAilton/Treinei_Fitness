@@ -1,5 +1,6 @@
 import UsuariosTreino from "../../models/UsuariosTreino.js";
 import Usuarios from "../../models/Usuario.js";
+import Dietas from "../../models/Dietas_Files.js";
 
 class UsuariosTreinoController {
   async store(req, res) {
@@ -55,6 +56,11 @@ class UsuariosTreinoController {
             model: Usuarios,
             as: "usuario",
           },
+          {
+            model: Dietas,
+            as: "dieta",
+          },
+
         ],
       });
       return res.status(200).json({ success: true, usuariosTreinos });
