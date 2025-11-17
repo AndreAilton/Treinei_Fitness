@@ -15,6 +15,7 @@ export default class UsuariosTreino extends Model {
           allowNull: true,
           field: "id_Treino",
         },
+        
         id_Treinador: {
           type: DataTypes.INTEGER,
           allowNull: false,

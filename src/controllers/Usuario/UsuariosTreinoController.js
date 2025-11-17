@@ -30,11 +30,22 @@ class UsuariosTreinoController {
   }
 
   async index(req, res) {
-    if (req.tipo !== "treinador") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Acesso restrito a treinadores." });
-    }
+
+
+
+    if (req.tipo == "usuario") {
+       const usuariosTreinos = await UsuariosTreino.findAll({
+        where: { id_Usuario: req.userId },
+        include: [
+          {
+            model: Usuarios,
+            as: "usuario",
+          },
+        ],
+      })
+
+      return res.status(200).json({ success: true, usuariosTreinos });
+    } 
 
     try {
       const usuariosTreinos = await UsuariosTreino.findAll({
@@ -96,8 +107,31 @@ class UsuariosTreinoController {
   }
 
   async destroy(req, res) {
+
+    if (req.params.id == req.userId) {
     try {
-      const usuariosTreino = await UsuariosTreino.findByPk(req.params.id);
+      const usuariosTreino = await UsuariosTreino.findAll({
+        where: { id_Usuario: req.userId }
+      });
+
+
+      await Promise.all(usuariosTreino.map(ut => ut.destroy()));
+      return res
+        .status(200)
+        .json({ success: true, message: "Relação usuário-treino removida" });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao remover relação usuário-treino",
+        error: e.message,
+      });
+    }
+  }
+
+
+  if (req.tipo == "treinador") {
+    try {
+      const usuariosTreino = await UsuariosTreino.findByPk(req.params.id); 
       if (!usuariosTreino) {
         return res.status(404).json({
           success: false,
@@ -116,6 +150,7 @@ class UsuariosTreinoController {
       });
     }
   }
+}
 }
 
 export default new UsuariosTreinoController();
