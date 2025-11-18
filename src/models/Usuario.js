@@ -94,5 +94,6 @@ export default class Usuarios extends Model {
       foreignKey: "id_usuario",
       as: "usuarios_treino",
     });
+  
   }
 }

@@ -64,5 +64,6 @@ export default class Dietas_Files extends Model {
   static associate(models) {
     this.belongsTo(models.Treinador, { foreignKey: "id_treinador" });
 
+
   }
 }

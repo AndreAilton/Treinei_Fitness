@@ -42,6 +42,10 @@ class UsuariosTreinoController {
             model: Usuarios,
             as: "usuario",
           },
+          {
+            model: Dietas,
+            as: "dieta",
+          },
         ],
       })
 

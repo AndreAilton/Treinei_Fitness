@@ -58,177 +58,176 @@ class UserController {
   }
 
   async show(req, res) {
-    // Verifica se é treinador e nega acesso
-    if (req.tipo === "treinador") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Acesso restrito a usuários." });
-    }
-
-    try {
-      const API_HOST = process.env.API_HOST;
-      const host = `${API_HOST}`;
-
-      // Primeiro, tenta encontrar o usuário sem includes para debug
-      let user;
-      if (req.params.telefone) {
-        user = await Usuarios.findOne({
-          where: {
-            telefone: req.params.telefone,
-            status: true,
-          },
-          attributes: ["id", "telefone", "nome", "email", "status"],
-        });
-      } else if (req.userId) {
-        user = await Usuarios.findOne({
-          where: {
-            id: req.userId,
-            status: true,
-          },
-          attributes: ["id", "telefone", "nome", "email", "status"],
-        });
-      } else {
-        return res.status(403).json({
-          success: false,
-          message: "É necessário fornecer um telefone ou estar autenticado",
-        });
-      }
-
-      // Se não encontrou o usuário, retorna erro
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: "Usuário não encontrado",
-        });
-      }
-
-      // Agora que encontramos o usuário, buscamos os relacionamentos
-      const userCompleto = await Usuarios.findOne({
-        where: { id: user.id },
-        attributes: ["id", "telefone", "nome", "email", "status"],
-        include: [
-          {
-            model: UsuariosTreino,
-            as: "usuarios_treino",
-            required: false,
-            include: [
-              {
-                model: Treino,
-                as: "treino",
-                attributes: ["id", "nome", "id_treinador"],
-                include: [
-                  {
-                    model: TreinoDia,
-                    as: "treinos_dia",
-                    attributes: [
-                      "id",
-                      "Dia_da_Semana",
-                      "Series",
-                      "Repeticoes",
-                      "Descanso",
-                    ],
-                    include: [
-                      {
-                        model: Exercicio,
-                        as: "exercicio",
-                        attributes: ["id", "nome", "descricao"],
-                        include: [
-                          {
-                            model: Files,
-                            as: "videos",
-                            attributes: [
-                              "id",
-                              "originalname",
-                              "filename",
-                              "category",
-                              "id_exercicio",
-                              "id_treinador",
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    model: Treinador,
-                    foreignKey: "id_treinador",
-                    attributes: ["id", "nome"],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            model: DietaFile,
-            as: "dietas",
-            required: false,
-            where: { status: true },
-            attributes: [
-              "id",
-              "originalname",
-              "filename",
-              "descricao",
-              "mime_type",
-              "id_treinador",
-              "status",
-            ],
-          },
-        ],
-      });
-
-      if (!userCompleto) {
-        return res.status(404).json({
-          success: false,
-          message: "Erro ao carregar dados completos do usuário",
-        });
-      }
-
-      // Converte para JSON uma única vez
-      const userJson = userCompleto.toJSON();
-
-      // Processa URLs dos vídeos
-      const usuariosTreinoComVideo = (userJson.usuarios_treino || []).map(
-        (ut) => {
-          if (ut.treino && ut.treino.treinos_dia) {
-            ut.treino.treinos_dia = ut.treino.treinos_dia.map((td) => {
-              if (td.exercicio && td.exercicio.videos) {
-                td.exercicio.videos = td.exercicio.videos.map((video) => ({
-                  ...video,
-                  url: `${host}/Videos/${video.id_treinador}/${
-                    video.category || "nocategory"
-                  }/${video.filename}`,
-                }));
-              }
-              return td;
-            });
-          }
-          return ut;
-        }
-      );
-
-      // Processa URLs das dietas
-      const dietasComUrl = (userJson.dietas || []).map((dieta) => ({
-        ...dieta,
-        url: `${host}/Dietas/${dieta.id_treinador}/${userJson.id}/${dieta.filename}`,
-      }));
-
-      // Retorna o resultado processado
-      return res.status(200).json({
-        success: true,
-        user: {
-          ...userJson,
-          usuarios_treino: usuariosTreinoComVideo,
-          dietas: dietasComUrl,
-        },
-      });
-    } catch (e) {
-      return res.status(400).json({
-        success: false,
-        message: "Erro ao buscar usuário",
-        error: e.message,
-      });
-    }
+  // Verifica se é treinador e nega acesso
+  if (req.tipo === "treinador") {
+    return res
+      .status(403)
+      .json({ success: false, message: "Acesso restrito a usuários." });
   }
+
+  try {
+    const API_HOST = process.env.API_HOST;
+    const host = `${API_HOST}`;
+
+    let user;
+
+    // Busca inicial
+    if (req.params.telefone) {
+      user = await Usuarios.findOne({
+        where: {
+          telefone: req.params.telefone,
+          status: true,
+        },
+        attributes: ["id", "telefone", "nome", "email", "status"],
+      });
+    } else if (req.userId) {
+      user = await Usuarios.findOne({
+        where: {
+          id: req.userId,
+          status: true,
+        },
+        attributes: ["id", "telefone", "nome", "email", "status"],
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "É necessário fornecer um telefone ou estar autenticado",
+      });
+    }
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado",
+      });
+    }
+
+    // Busca completa com relacionamentos CORRETOS
+    const userCompleto = await Usuarios.findOne({
+      where: { id: user.id },
+      attributes: ["id", "telefone", "nome", "email", "status"],
+      include: [
+        {
+          model: UsuariosTreino,
+          as: "usuarios_treino",
+          required: false,
+          include: [
+            // Treino do usuário
+            {
+              model: Treino,
+              as: "treino",
+              attributes: ["id", "nome", "id_treinador"],
+              include: [
+                {
+                  model: TreinoDia,
+                  as: "treinos_dia",
+                  attributes: [
+                    "id",
+                    "Dia_da_Semana",
+                    "Series",
+                    "Repeticoes",
+                    "Descanso",
+                  ],
+                  include: [
+                    {
+                      model: Exercicio,
+                      as: "exercicio",
+                      attributes: ["id", "nome", "descricao"],
+                      include: [
+                        {
+                          model: Files,
+                          as: "videos",
+                          attributes: [
+                            "id",
+                            "originalname",
+                            "filename",
+                            "category",
+                            "id_exercicio",
+                            "id_treinador",
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  model: Treinador,
+                  foreignKey: "id_treinador",
+                  attributes: ["id", "nome"],
+                },
+              ],
+            },
+
+            // ⚠️ AQUI SIM É O LOCAL CORRETO DA DIETA
+            {
+              model: DietaFile,
+              as: "dieta",
+              required: false,
+              attributes: [
+                "id",
+                "originalname",
+                "filename",
+                "descricao",
+                "mime_type",
+                "id_treinador",
+                "status",
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!userCompleto) {
+      return res.status(404).json({
+        success: false,
+        message: "Erro ao carregar dados completos do usuário",
+      });
+    }
+
+    const userJson = userCompleto.toJSON();
+
+    // Processa URLs dos vídeos dos exercícios
+    const usuariosTreinoComVideo = (userJson.usuarios_treino || []).map((ut) => {
+      if (ut.treino && ut.treino.treinos_dia) {
+        ut.treino.treinos_dia = ut.treino.treinos_dia.map((td) => {
+          if (td.exercicio && td.exercicio.videos) {
+            td.exercicio.videos = td.exercicio.videos.map((video) => ({
+              ...video,
+              url: `${host}/Videos/${video.id_treinador}/${
+                video.category || "nocategory"
+              }/${video.filename}`,
+            }));
+          }
+          return td;
+        });
+      }
+
+      // Adiciona url da dieta
+      if (ut.dieta) {
+        ut.dieta.url = `${host}/Dietas/${ut.dieta.id_treinador}/${userJson.id}/${ut.dieta.filename}`;
+      }
+
+      return ut;
+    });
+
+    // resposta final
+    return res.status(200).json({
+      success: true,
+      user: {
+        ...userJson,
+        usuarios_treino: usuariosTreinoComVideo,
+      },
+    });
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: "Erro ao buscar usuário",
+      error: e.message,
+    });
+  }
+}
+
 
   async update(req, res) {
     try {
