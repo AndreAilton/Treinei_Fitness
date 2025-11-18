@@ -171,8 +171,7 @@ class UserController {
                 "mime_type",
                 "id_treinador",
                 "status",
-              ],
-            },
+              ]}
           ],
         },
       ],
@@ -205,7 +204,7 @@ class UserController {
 
       // Adiciona url da dieta
       if (ut.dieta) {
-        ut.dieta.url = `${host}/Dietas/${ut.dieta.id_treinador}/${userJson.id}/${ut.dieta.filename}`;
+        ut.dieta = `${host}/Dietas/${ut.dieta.id_treinador}/${ut.dieta.filename}`;
       }
 
       return ut;
