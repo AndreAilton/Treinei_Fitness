@@ -5,6 +5,7 @@ import TreinoController from "../../controllers/Treinador/TreinoController.js";
 const router = express.Router();
 
 router.post("/", LoginRequire, TreinoController.store);
+router.post("/duplicar/:id", LoginRequire, TreinoController.duplicarTreino);
 router.get("/", LoginRequire, TreinoController.index);
 router.get("/:id", LoginRequire, TreinoController.show);
 router.put("/:id", LoginRequire, TreinoController.update);

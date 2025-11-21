@@ -4,7 +4,7 @@ import fs from "fs";
 
 // URL e token
 const apiURL = "http://localhost:3000/exercicios";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZS5haWx0b24uMTBAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MzQyNzY4MywiZXhwIjoxNzY2MDE5NjgzfQ.VY22M7VrApUMuI8fHVEP-hw95oDfmLateDLvoHJeWUs";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZWFpbHRvbjFAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2MzQzOTY5MywiZXhwIjoxNzY2MDMxNjkzfQ.IdAqz3pc-uNUiwqIcNlbdW9nq5trRdjDvM5WvV3EY0c";
 
 // JSON de exercícios
 const exercicios = [
