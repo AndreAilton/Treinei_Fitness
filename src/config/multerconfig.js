@@ -33,6 +33,7 @@ export default {
       
       // Pega categoria do body (fallback: "nocategory")
       const categoria = req.body?.Categoria || "nocategory";
+      console.log(req)
       const categoryDir = resolve(userDir, categoria);
 
       // Cria as pastas, se necessário
