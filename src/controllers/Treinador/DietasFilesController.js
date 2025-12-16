@@ -88,6 +88,7 @@ class DietasFilesController {
           "descricao",
           "mime_type",
           "id_treinador",
+          "url",
           "status",
           "created_at",
           "updated_at",
