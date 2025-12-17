@@ -10,6 +10,7 @@ import UsuarioTreino from "./Usuario/UsuariosTreinoRoutes.js";
 import FileRoutes from "./FilesRoutes.js";
 import DietaRoutes from "./Treinador/DietasFilesRoutes.js";
 
+
 const router = Router();
 
 // Rota de boas-vindas
@@ -25,6 +26,9 @@ router.use("/treinos-dias", TreinoDiaRoutes);
 router.use("/usuario-treino", UsuarioTreino);
 router.use("/files", FileRoutes);
 router.use("/dietas", DietaRoutes);
+
+
+
 
 
 // Rota para 404

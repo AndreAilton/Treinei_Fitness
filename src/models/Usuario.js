@@ -68,6 +68,14 @@ export default class Usuarios extends Model {
             },
           },
         },
+        password_reset_token: {   
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        password_reset_expires: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
       },
       {
         sequelize, // Instância do sequelize
