@@ -29,7 +29,7 @@ class PasswordController {
 
       // Envia o email
 
-      const link = `http://localhost:5173/usuarios/reset-password/${token}?email=${email}`;
+      const link = `http://localhost:5173/reset-password/${token}?email=${email}`;
 
       // Template HTML Profissional
       const htmlEmail = `
