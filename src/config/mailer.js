@@ -1,11 +1,16 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+// Carrega as variáveis do arquivo .env
+dotenv.config(); 
 
 const transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io", // Ou smtp.gmail.com, etc.
-  port: 2525,
+  host: process.env.MAIL_HOST, 
+  port: Number(process.env.MAIL_PORT),
+  secure: process.env.MAIL_SECURE === 'true', // Se for true usa SSL, se false usa TLS
   auth: {
-    user: "613e3ecbb1233c", 
-    pass: "abf937f2497846"
+    user: process.env.MAIL_USER, 
+    pass: process.env.MAIL_PASS
   }
 });
 

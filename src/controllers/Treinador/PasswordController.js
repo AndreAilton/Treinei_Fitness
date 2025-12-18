@@ -22,7 +22,6 @@ class PasswordController {
       const now = new Date();
       now.setHours(now.getHours() + 1);
 
-      
       await user.update({
         password_reset_token: token,
         password_reset_expires: now,
@@ -30,7 +29,7 @@ class PasswordController {
 
       // Envia o email
 
-      const link = `http://localhost:5173/reset-password/${token}?email=${email}&trainer=true`;
+      const link = `${process.env.API_HOST}/reset-password/${token}?email=${email}&trainer=true`;
 
       // Template HTML Profissional
       const htmlEmail = `
@@ -56,7 +55,7 @@ class PasswordController {
           
           <tr>
             <td align="center" style="background-color: #2c3e50; padding: 30px;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">FitnessApp</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Treinei.Fit</h1>
             </td>
           </tr>
 
@@ -86,7 +85,7 @@ class PasswordController {
           
           <tr>
             <td style="background-color: #eeeeee; padding: 20px; text-align: center; color: #888888; font-size: 12px;">
-              &copy; ${new Date().getFullYear()} FitnessApp. Todos os direitos reservados.
+              &copy; ${new Date().getFullYear()} Treinei.Fit. Todos os direitos reservados.
             </td>
           </tr>
         </table>
@@ -100,13 +99,15 @@ class PasswordController {
 `;
 
       // IMPORTANTE: Altere o link para o endereço do seu Front-end
+      // Exemplo no PasswordController.js
+
       await transport.sendMail({
         to: email,
-        from: "suporte@fitnessapp.com",
-        subject: "Recuperação de Senha - FitnessApp",
-        html: htmlEmail,
+        // O Gmail exige que o remetente seja o dono da conta
+        from: `Treinei.Fit <${process.env.MAIL_USER}>`,
+        subject: "Recuperação de Senha",
+        html: htmlEmail, // seu template html
       });
-
       return res
         .status(200)
         .json({ success: true, message: "Email de recuperação enviado!" });
