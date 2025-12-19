@@ -12,7 +12,14 @@ const dietasPath = path.resolve(process.env.UPLOADS_PATH, "dietas");
 class app {
   constructor() {
     this.app = express();
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: process.env.FRONTEND_URL,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+      })
+    );
     this.middlewares();
     this.routes();
   }
