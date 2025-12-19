@@ -29,10 +29,33 @@ class UsuariosTreinoController {
       });
     }
   }
+  
+  async indexall(req, res) {
+    try {
+      const usuariosTreinos = await UsuariosTreino.findAll({
+        where: {treino_ativo: true},
+        include: [
+          {
+            model: Usuarios,
+            as: "usuario",
+          },
+          {
+            model: Dietas,
+            as: "dieta",
+          },
+        ],
+      });
+      return res.status(200).json({ success: true, usuariosTreinos });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao listar relações usuário-treino",
+        error: e.message,
+      });
+    }
+  }
 
   async index(req, res) {
-
-
 
     if (req.tipo == "usuario") {
        const usuariosTreinos = await UsuariosTreino.findAll({

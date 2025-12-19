@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // URL e token
-const apiURL = "http://localhost:3000/treinos-dias";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJhbmRyZWFpbHRvbmRldjJAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2NTkwMzM1NCwiZXhwIjoxNzY4NDk1MzU0fQ.MpsM3xQNgBJcdBh7W2Vk_meI-cjtH8qufmBrxgj9Mf0";
+const apiURL = "https://www.fitnessapi.andreailtondev.tech/treinos-dias";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZS5haWx0b24uMTBAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2NjExMDY5NCwiZXhwIjoxNzY4NzAyNjk0fQ.gwr_oUc5rYkOy6phbKiT7FZAGcJZuJqFqSJoFKeo8wo";
 
 // JSON com os dados dos treinos por dia
 const treinosDias = [
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 1,
     "Series": 4,
@@ -16,7 +16,7 @@ const treinosDias = [
     "Observacoes": "Executar com carga moderada"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 2,
     "Series": 4,
@@ -25,7 +25,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 3,
     "Series": 3,
@@ -34,7 +34,7 @@ const treinosDias = [
     "Observacoes": "Controlar a descida"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 4,
     "Series": 4,
@@ -43,7 +43,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 5,
     "Series": 3,
@@ -52,7 +52,7 @@ const treinosDias = [
     "Observacoes": "Mantenha o tronco firme"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Segunda-Feira",
     "id_Exercicio": 6,
     "Series": 4,
@@ -61,7 +61,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 7,
     "Series": 4,
@@ -70,7 +70,7 @@ const treinosDias = [
     "Observacoes": "Puxar com o dorso, não com os braços"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 8,
     "Series": 4,
@@ -79,7 +79,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 9,
     "Series": 3,
@@ -88,7 +88,7 @@ const treinosDias = [
     "Observacoes": "Manter boa postura"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 10,
     "Series": 4,
@@ -97,7 +97,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 11,
     "Series": 4,
@@ -106,7 +106,7 @@ const treinosDias = [
     "Observacoes": "Usar carga pesada"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Terça-Feira",
     "id_Exercicio": 12,
     "Series": 3,
@@ -115,7 +115,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 13,
     "Series": 4,
@@ -124,7 +124,7 @@ const treinosDias = [
     "Observacoes": "Alongar o peitoral antes"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 14,
     "Series": 4,
@@ -133,7 +133,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 15,
     "Series": 3,
@@ -142,7 +142,7 @@ const treinosDias = [
     "Observacoes": "Evitar esticar demais o braço"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 16,
     "Series": 4,
@@ -151,7 +151,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 17,
     "Series": 3,
@@ -160,7 +160,7 @@ const treinosDias = [
     "Observacoes": "Fazer até a falha técnica"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quarta-Feira",
     "id_Exercicio": 18,
     "Series": 4,
@@ -169,7 +169,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 19,
     "Series": 4,
@@ -178,7 +178,7 @@ const treinosDias = [
     "Observacoes": "Manter cotovelos fixos"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 20,
     "Series": 4,
@@ -187,7 +187,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 21,
     "Series": 3,
@@ -196,7 +196,7 @@ const treinosDias = [
     "Observacoes": "Concentrar no bíceps"
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 22,
     "Series": 4,
@@ -205,7 +205,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 23,
     "Series": 3,
@@ -214,7 +214,7 @@ const treinosDias = [
     "Observacoes": ""
   },
   {
-    "id_treino": 5,
+    "id_treino": 1,
     "Dia_da_Semana": "Quinta-Feira",
     "id_Exercicio": 24,
     "Series": 4,
