@@ -8,7 +8,7 @@ dotenv.config();
 
 const uploadPath = path.resolve(process.env.UPLOADS_PATH, "videos");
 const dietasPath = path.resolve(process.env.UPLOADS_PATH, "dietas");
-
+console.log(process.env.FRONTEND_URL)
 class app {
   constructor() {
     this.app = express();
