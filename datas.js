@@ -3,8 +3,8 @@ import FormData from "form-data";
 import fs from "fs";
 
 // URL e token
-const apiURL = "https://www.fitnessapi.andreailtondev.tech/exercicios";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZS5haWx0b24uMTBAZ21haWwuY29tIiwidGlwbyI6InRyZWluYWRvciIsImlhdCI6MTc2NjExMDY5NCwiZXhwIjoxNzY4NzAyNjk0fQ.gwr_oUc5rYkOy6phbKiT7FZAGcJZuJqFqSJoFKeo8wo";
+const apiURL = "http://localhost:3000/exercicios";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbmRyZXRlczIyM0BnbWFpbC5jb20iLCJ0aXBvIjoidHJlaW5hZG9yIiwiaWF0IjoxNzY2MzQ0MzE5LCJleHAiOjE3Njg5MzYzMTl9.tQK8r3xZezENbxTrJ-TLNBy-y79WoE1ral0x75YO3zY";
 
 // JSON de exercícios
 const exercicios = [

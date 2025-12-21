@@ -3,6 +3,7 @@ import Exercicio from "../../models/Exercicio.js";
 import Treino from "../../models/Treino.js";
 import UsuariosTreino from "../../models/UsuariosTreino.js";
 import Usuarios from "../../models/Usuario.js";
+import sequelize from "sequelize";
 
 class TreinadorController {
   async store(req, res) {
@@ -28,10 +29,16 @@ class TreinadorController {
     }
   }
 
+
   async index(req, res) {
     try {
       const treinadores = await Treinador.findAll({
         attributes: ["id", "nome", "email", "status"],
+        where: {
+          id: {
+            [sequelize.Op.ne]: 1, // "ne" significa Not Equal (Diferente de 1)
+          },
+        },
       });
       return res.status(200).json({ success: true, treinadores });
     } catch (e) {

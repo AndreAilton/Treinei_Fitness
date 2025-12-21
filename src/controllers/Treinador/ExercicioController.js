@@ -8,79 +8,125 @@ import path from "path";
 const upload = multer(multerConfig).single("file");
 
 class ExercicioController {
- async store(req, res) {
-  upload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({
-        success: false,
-        message: "Erro no upload",
-        error: err.code,
-      });
-    }
-
-    try {
-      const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } = req.body;
-      const id_treinador = req.treinadorId;
-
-      // ⛔ REMOVIDO: antes obrigava enviar arquivo
-      // Agora podemos criar exercício mesmo SEM vídeo
-
-      const novoExercicio = await Exercicio.create({
-        nome,
-        Categoria,
-        Grupo_Muscular,
-        Descricao,
-        Aparelho,
-        id_treinador,
-      });
-
-      // Se NÃO existir arquivo → retorna exercício sem vídeos
-      if (!req.file) {
-        return res.status(201).json({
-          success: true,
-          message: "Exercício criado sem vídeo (opcional)",
-          exercicio: novoExercicio,
-          videos: [],
+  async store(req, res) {
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: "Erro no upload",
+          error: err.code,
         });
       }
 
-      // Se existir arquivo → continua normalmente
-      const { originalname, filename } = req.file;
+      try {
+        const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } =
+          req.body;
+        const id_treinador = req.treinadorId;
 
-      const novoArquivo = await File.create({
-        originalname,
-        filename,
-        id_exercicio: novoExercicio.id,
-        id_treinador,
-        category: Categoria || "nocategory",
+        // ⛔ REMOVIDO: antes obrigava enviar arquivo
+        // Agora podemos criar exercício mesmo SEM vídeo
+
+        const novoExercicio = await Exercicio.create({
+          nome,
+          Categoria,
+          Grupo_Muscular,
+          Descricao,
+          Aparelho,
+          id_treinador,
+        });
+
+        // Se NÃO existir arquivo → retorna exercício sem vídeos
+        if (!req.file) {
+          return res.status(201).json({
+            success: true,
+            message: "Exercício criado sem vídeo (opcional)",
+            exercicio: novoExercicio,
+            videos: [],
+          });
+        }
+
+        // Se existir arquivo → continua normalmente
+        const { originalname, filename } = req.file;
+
+        const novoArquivo = await File.create({
+          originalname,
+          filename,
+          id_exercicio: novoExercicio.id,
+          id_treinador,
+          category: Categoria || "nocategory",
+        });
+
+        const API_HOST = process.env.API_HOST;
+        const host = `${API_HOST}`;
+
+        const videoComUrl = {
+          ...novoArquivo.toJSON(),
+          url: `${host}/Videos/${req.treinadorId}/${
+            novoArquivo.category || "nocategory"
+          }/${novoArquivo.filename}`,
+        };
+
+        return res.status(201).json({
+          success: true,
+          message: "Exercício criado com ou sem vídeo",
+          exercicio: novoExercicio,
+          videos: [videoComUrl],
+        });
+      } catch (e) {
+        return res.status(400).json({
+          success: false,
+          message: "Erro ao criar exercício",
+          error: e.message,
+        });
+      }
+    });
+  }
+
+  async indexpublico(req, res) {
+    try {
+      const exercicios = await Exercicio.findAll({
+        where: { id_treinador: 1 },
+        include: [
+          {
+            model: File,
+            as: "videos",
+            attributes: [
+              "id",
+              "originalname",
+              "filename",
+              "category",
+              "id_exercicio",
+              "id_treinador",
+            ],
+          },
+        ],
       });
 
-      const API_HOST = process.env.API_HOST;
-      const host = `${API_HOST}`;
+      const host = process.env.APP_URL;
 
-      const videoComUrl = {
-        ...novoArquivo.toJSON(),
-        url: `${host}/Videos/${req.treinadorId}/${
-          novoArquivo.category || "nocategory"
-        }/${novoArquivo.filename}`,
-      };
+      const result = exercicios.map((ex) => {
+        const videosComUrl = ex.videos.map((video) => ({
+          ...video.toJSON(),
+          url: `${host}/Videos/1/${
+            video.category || "nocategory"
+          }/${video.filename}`,
+        }));
 
-      return res.status(201).json({
-        success: true,
-        message: "Exercício criado com ou sem vídeo",
-        exercicio: novoExercicio,
-        videos: [videoComUrl],
+        return {
+          ...ex.toJSON(),
+          videos: videosComUrl,
+        };
       });
+
+      return res.status(200).json({ success: true, exercicios: result });
     } catch (e) {
       return res.status(400).json({
         success: false,
-        message: "Erro ao criar exercício",
+        message: "Erro ao listar exercícios",
         error: e.message,
       });
     }
-  });
-}
-
+  }
 
   async index(req, res) {
     if (req.tipo !== "treinador") {
@@ -184,124 +230,127 @@ class ExercicioController {
     }
   }
 
-async update(req, res) {
-  upload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({
-        success: false,
-        message: "Erro no upload",
-        error: err.code,
-      });
-    }
-
-    try {
-      const exercicio = await Exercicio.findByPk(req.params.id, {
-        include: [{ model: File, as: "videos" }],
-      });
-
-      if (!exercicio) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Exercício não encontrado" });
+  async update(req, res) {
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: "Erro no upload",
+          error: err.code,
+        });
       }
 
-      // ⇢ Atualiza dados básicos primeiro
-      await exercicio.update(req.body);
-
-      const host = process.env.APP_URL;
-      const baseUploads = process.env.UPLOADS_PATH;
-
-      // -------------------------------------------------------------
-      // ⚠️ SE EXISTIR NOVO ARQUIVO → CRIAR DIRETÓRIOS E SALVAR VÍDEO
-      // -------------------------------------------------------------
-      if (req.file) {
-        const categoria = exercicio.Categoria || "nocategory";
-        const treinadorId = req.treinadorId;
-
-        const pastaTreinador = path.resolve(baseUploads, "videos", `${treinadorId}`);
-        const pastaCategoria = path.resolve(pastaTreinador, categoria);
-
-
-        // ✔️ Cria pasta do treinador se não existir
-        if (!fs.existsSync(pastaTreinador)) {
-          fs.mkdirSync(pastaTreinador, { recursive: true });
-        }
-
-        // ✔️ Cria pasta da categoria se não existir
-        if (!fs.existsSync(pastaCategoria)) {
-          fs.mkdirSync(pastaCategoria, { recursive: true });
-        }
-
-        // ⚠️ Remove arquivo ANTIGO se existir
-        const arquivoAntigo = await File.findOne({
-          where: { id_exercicio: exercicio.id },
+      try {
+        const exercicio = await Exercicio.findByPk(req.params.id, {
+          include: [{ model: File, as: "videos" }],
         });
 
-        if (arquivoAntigo) {
-          const caminhoAntigo = path.resolve(
-            pastaTreinador,
-            arquivoAntigo.category || "nocategory",
-            arquivoAntigo.filename
+        if (!exercicio) {
+          return res
+            .status(404)
+            .json({ success: false, message: "Exercício não encontrado" });
+        }
+
+        // ⇢ Atualiza dados básicos primeiro
+        await exercicio.update(req.body);
+
+        const host = process.env.APP_URL;
+        const baseUploads = process.env.UPLOADS_PATH;
+
+        // -------------------------------------------------------------
+        // ⚠️ SE EXISTIR NOVO ARQUIVO → CRIAR DIRETÓRIOS E SALVAR VÍDEO
+        // -------------------------------------------------------------
+        if (req.file) {
+          const categoria = exercicio.Categoria || "nocategory";
+          const treinadorId = req.treinadorId;
+
+          const pastaTreinador = path.resolve(
+            baseUploads,
+            "videos",
+            `${treinadorId}`
           );
+          const pastaCategoria = path.resolve(pastaTreinador, categoria);
 
-          if (fs.existsSync(caminhoAntigo)) fs.unlinkSync(caminhoAntigo);
+          // ✔️ Cria pasta do treinador se não existir
+          if (!fs.existsSync(pastaTreinador)) {
+            fs.mkdirSync(pastaTreinador, { recursive: true });
+          }
 
-          await arquivoAntigo.destroy();
+          // ✔️ Cria pasta da categoria se não existir
+          if (!fs.existsSync(pastaCategoria)) {
+            fs.mkdirSync(pastaCategoria, { recursive: true });
+          }
+
+          // ⚠️ Remove arquivo ANTIGO se existir
+          const arquivoAntigo = await File.findOne({
+            where: { id_exercicio: exercicio.id },
+          });
+
+          if (arquivoAntigo) {
+            const caminhoAntigo = path.resolve(
+              pastaTreinador,
+              arquivoAntigo.category || "nocategory",
+              arquivoAntigo.filename
+            );
+
+            if (fs.existsSync(caminhoAntigo)) fs.unlinkSync(caminhoAntigo);
+
+            await arquivoAntigo.destroy();
+          }
+
+          // ---------------------------------------------------
+          // ✔️ Salva novo arquivo no novo diretório corretamente
+          // ---------------------------------------------------
+          const { originalname, filename } = req.file;
+
+          const novoArquivo = await File.create({
+            originalname,
+            filename,
+            id_exercicio: exercicio.id,
+            id_treinador: treinadorId,
+            category: categoria,
+          });
+
+          const videosComUrl = [
+            {
+              ...novoArquivo.toJSON(),
+              url: `${host}/Videos/${treinadorId}/${categoria}/${filename}`,
+            },
+          ];
+
+          return res.status(200).json({
+            success: true,
+            message: "Exercício e vídeo atualizados com sucesso",
+            exercicio,
+            videos: videosComUrl,
+          });
         }
 
-        // ---------------------------------------------------
-        // ✔️ Salva novo arquivo no novo diretório corretamente
-        // ---------------------------------------------------
-        const { originalname, filename } = req.file;
-
-        const novoArquivo = await File.create({
-          originalname,
-          filename,
-          id_exercicio: exercicio.id,
-          id_treinador: treinadorId,
-          category: categoria,
-        });
-
-        const videosComUrl = [
-          {
-            ...novoArquivo.toJSON(),
-            url: `${host}/Videos/${treinadorId}/${categoria}/${filename}`,
-          },
-        ];
+        // -------------------------------------------------------------
+        // ⚠️ Se NÃO mandou vídeo: retorna exercício normalmente
+        // -------------------------------------------------------------
+        const videosComUrl = exercicio.videos.map((video) => ({
+          ...video.toJSON(),
+          url: `${host}/Videos/${video.id_treinador}/${
+            video.category || "nocategory"
+          }/${video.filename}`,
+        }));
 
         return res.status(200).json({
           success: true,
-          message: "Exercício e vídeo atualizados com sucesso",
+          message: "Exercício atualizado com sucesso (sem alterar vídeo)",
           exercicio,
           videos: videosComUrl,
         });
+      } catch (e) {
+        return res.status(400).json({
+          success: false,
+          message: "Erro ao atualizar exercício",
+          error: e.message,
+        });
       }
-
-      // -------------------------------------------------------------
-      // ⚠️ Se NÃO mandou vídeo: retorna exercício normalmente
-      // -------------------------------------------------------------
-      const videosComUrl = exercicio.videos.map((video) => ({
-        ...video.toJSON(),
-        url: `${host}/Videos/${video.id_treinador}/${
-          video.category || "nocategory"
-        }/${video.filename}`,
-      }));
-
-      return res.status(200).json({
-        success: true,
-        message: "Exercício atualizado com sucesso (sem alterar vídeo)",
-        exercicio,
-        videos: videosComUrl,
-      });
-    } catch (e) {
-      return res.status(400).json({
-        success: false,
-        message: "Erro ao atualizar exercício",
-        error: e.message,
-      });
-    }
-  });
-}
+    });
+  }
 
   async destroy(req, res) {
     try {

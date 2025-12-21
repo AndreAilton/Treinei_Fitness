@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post("/", LoginRequire, ExercicioController.store);
 router.get("/", LoginRequire, ExercicioController.index);
+router.get("/publico", LoginRequire, ExercicioController.indexpublico);
 router.get("/:id", LoginRequire, ExercicioController.show);
 router.put("/:id", LoginRequire, ExercicioController.update);
 router.delete("/:id", LoginRequire, ExercicioController.destroy);
