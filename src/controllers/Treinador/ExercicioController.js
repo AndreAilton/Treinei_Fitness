@@ -2,6 +2,7 @@ import Exercicio from "../../models/Exercicio.js";
 import File from "../../models/Files.js";
 import multer from "multer";
 import multerConfig from "../../config/multerconfig.js";
+import axios from "axios";
 import fs from "fs";
 import path from "path";
 
@@ -9,78 +10,145 @@ const upload = multer(multerConfig).single("file");
 
 class ExercicioController {
   async store(req, res) {
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: "Erro no upload",
-          error: err.code,
-        });
-      }
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro no upload",
+        error: err.code,
+      });
+    }
 
-      try {
-        const { nome, Descricao, Categoria, Grupo_Muscular, Aparelho } =
-          req.body;
-        const id_treinador = req.treinadorId;
+    try {
+      const {
+        nome,
+        Descricao,
+        Categoria,
+        Grupo_Muscular,
+        Aparelho,
+        video_url, // 👈 NOVO
+      } = req.body;
 
-        // ⛔ REMOVIDO: antes obrigava enviar arquivo
-        // Agora podemos criar exercício mesmo SEM vídeo
+      const id_treinador = req.treinadorId;
 
-        const novoExercicio = await Exercicio.create({
-          nome,
-          Categoria,
-          Grupo_Muscular,
-          Descricao,
-          Aparelho,
-          id_treinador,
-        });
+      const novoExercicio = await Exercicio.create({
+        nome,
+        Categoria,
+        Grupo_Muscular,
+        Descricao,
+        Aparelho,
+        id_treinador,
+      });
 
-        // Se NÃO existir arquivo → retorna exercício sem vídeos
-        if (!req.file) {
-          return res.status(201).json({
-            success: true,
-            message: "Exercício criado sem vídeo (opcional)",
-            exercicio: novoExercicio,
-            videos: [],
+      // --------------------------------------------------
+      // 🟢 CASO 1 — IMPORTAÇÃO VIA URL (50MB+)
+      // --------------------------------------------------
+      if (video_url) {
+        if (!video_url.startsWith("http")) {
+          return res.status(400).json({
+            success: false,
+            message: "URL de vídeo inválida",
           });
         }
 
-        // Se existir arquivo → continua normalmente
-        const { originalname, filename } = req.file;
+        const categoria = Categoria || "nocategory";
+        const baseUploads = process.env.UPLOADS_PATH;
+
+        const pastaTreinador = path.resolve(
+          baseUploads,
+          "videos",
+          `${id_treinador}`,
+          categoria
+        );
+
+        if (!fs.existsSync(pastaTreinador)) {
+          fs.mkdirSync(pastaTreinador, { recursive: true });
+        }
+
+        const filename = `${Date.now()}-${novoExercicio.id}.mp4`;
+        const filePath = path.resolve(pastaTreinador, filename);
+
+        const response = await axios({
+          method: "GET",
+          url: video_url,
+          responseType: "stream",
+        });
+
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+
+        await new Promise((resolve, reject) => {
+          writer.on("finish", resolve);
+          writer.on("error", reject);
+        });
 
         const novoArquivo = await File.create({
-          originalname,
+          originalname: filename,
           filename,
           id_exercicio: novoExercicio.id,
           id_treinador,
-          category: Categoria || "nocategory",
+          category: categoria,
         });
 
-        const API_HOST = process.env.API_HOST;
-        const host = `${API_HOST}`;
-
-        const videoComUrl = {
-          ...novoArquivo.toJSON(),
-          url: `${host}/Videos/${req.treinadorId}/${
-            novoArquivo.category || "nocategory"
-          }/${novoArquivo.filename}`,
-        };
+        const host = process.env.APP_URL;
 
         return res.status(201).json({
           success: true,
-          message: "Exercício criado com ou sem vídeo",
+          message: "Exercício importado com vídeo via URL",
           exercicio: novoExercicio,
-          videos: [videoComUrl],
-        });
-      } catch (e) {
-        return res.status(400).json({
-          success: false,
-          message: "Erro ao criar exercício",
-          error: e.message,
+          videos: [
+            {
+              ...novoArquivo.toJSON(),
+              url: `${host}/Videos/${id_treinador}/${categoria}/${filename}`,
+            },
+          ],
         });
       }
-    });
-  }
+
+      // --------------------------------------------------
+      // 🟡 CASO 2 — UPLOAD NORMAL (MULTER)
+      // --------------------------------------------------
+      if (!req.file) {
+        return res.status(201).json({
+          success: true,
+          message: "Exercício criado sem vídeo",
+          exercicio: novoExercicio,
+          videos: [],
+        });
+      }
+
+      const { originalname, filename } = req.file;
+
+      const novoArquivo = await File.create({
+        originalname,
+        filename,
+        id_exercicio: novoExercicio.id,
+        id_treinador,
+        category: Categoria || "nocategory",
+      });
+
+      const host = process.env.API_HOST;
+
+      return res.status(201).json({
+        success: true,
+        message: "Exercício criado com upload de vídeo",
+        exercicio: novoExercicio,
+        videos: [
+          {
+            ...novoArquivo.toJSON(),
+            url: `${host}/Videos/${id_treinador}/${Categoria || "nocategory"}/${filename}`,
+          },
+        ],
+      });
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Erro ao criar exercício",
+        error: e.message,
+      });
+    }
+  });
+}
 
   async indexpublico(req, res) {
     try {

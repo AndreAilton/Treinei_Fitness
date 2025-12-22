@@ -19,8 +19,8 @@ class app {
   }
 
   middlewares() {
-    this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false, limit: '100mb' }));
+    this.app.use(express.json({ limit: '100mb' }));
     this.app.use("/Videos", express.static(uploadPath));
     this.app.use("/Dietas", express.static(dietasPath));
   }
